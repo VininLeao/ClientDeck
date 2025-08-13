@@ -205,12 +205,108 @@
             background: #30363d;
         }
 
+        .view-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         .kanban-board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             max-width: 1400px;
             margin: 0 auto;
+        }
+
+        .table-view {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #161b22, #1c2128);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .table-view table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #0d1117;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-view th,
+        .table-view td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .table-view th {
+            background: #21262d;
+            color: #f0f6fc;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .table-view td {
+            color: #e6edf3;
+            font-size: 0.85rem;
+        }
+
+        .table-view tr:hover {
+            background: #161b22;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 80px;
+            display: inline-block;
+        }
+
+        .status-todo {
+            background: rgba(248, 81, 73, 0.1);
+            color: #ff6b6b;
+            border: 1px solid #f85149;
+        }
+
+        .status-progress {
+            background: rgba(210, 153, 34, 0.1);
+            color: #ffc107;
+            border: 1px solid #d29922;
+        }
+
+        .status-done {
+            background: rgba(63, 185, 80, 0.1);
+            color: #56d364;
+            border: 1px solid #3fb950;
+        }
+
+        .progress-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-bar-mini {
+            flex: 1;
+            background: #21262d;
+            border-radius: 4px;
+            height: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill-mini {
+            background: linear-gradient(90deg, #3fb950, #56d364);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
         }
 
         .column {
@@ -375,6 +471,15 @@
             border-top: 1px solid #30363d;
             font-size: 0.7rem;
             color: #8b949e;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .card .dates-info {
+            font-size: 0.65rem;
+            color: #8b949e;
+            margin-top: 6px;
+            line-height: 1.2;
         }
 
         .column.drag-over {
@@ -760,6 +865,25 @@
             .template-item select {
                 width: 100%;
             }
+
+            .card .card-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .table-view {
+                padding: 10px;
+            }
+
+            .table-view table {
+                font-size: 0.75rem;
+            }
+
+            .table-view th,
+            .table-view td {
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
@@ -805,11 +929,17 @@
         <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
     </div>
 
+    <div class="view-toggle">
+        <button class="btn btn-secondary" id="viewToggleBtn" onclick="toggleView()">
+            <span>📊</span> Visão Planilha
+        </button>
+    </div>
+
     <div class="keyboard-shortcut">
         💡 Dica: Use Alt+N para novo cliente, Escape para fechar modais
     </div>
 
-    <div class="kanban-board">
+    <div class="kanban-board" id="kanbanView">
         <div class="column todo" id="todo">
             <h2>🔴 A Fazer</h2>
         </div>
@@ -819,6 +949,24 @@
         <div class="column done" id="done">
             <h2>🟢 Concluído</h2>
         </div>
+    </div>
+
+    <div class="table-view" id="tableView">
+        <table id="clientsTable">
+            <thead>
+                <tr>
+                    <th>Nome do Cliente</th>
+                    <th>Template</th>
+                    <th>Status</th>
+                    <th>Progresso</th>
+                    <th>Data de Início</th>
+                    <th>Data de Fim</th>
+                </tr>
+            </thead>
+            <tbody id="clientsTableBody">
+                <!-- Dados da tabela serão inseridos aqui -->
+            </tbody>
+        </table>
     </div>
 
     <!-- Modal para novo cliente -->
@@ -981,11 +1129,13 @@
         let currentClientId = null;
         let selectedTemplateId = null;
         let editingTemplateId = null;
+        let currentView = 'kanban'; // 'kanban' ou 'table'
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
             renderClients();
+            renderTableView();
             updateStats();
             setupDragAndDrop();
             setupSearch();
@@ -1024,6 +1174,25 @@
             });
         }
 
+        // Alternar entre visão Kanban e Planilha
+        function toggleView() {
+            const kanbanView = document.getElementById('kanbanView');
+            const tableView = document.getElementById('tableView');
+            const toggleBtn = document.getElementById('viewToggleBtn');
+
+            if (currentView === 'kanban') {
+                currentView = 'table';
+                kanbanView.style.display = 'none';
+                tableView.style.display = 'block';
+                toggleBtn.innerHTML = '<span>📋</span> Visão Kanban';
+            } else {
+                currentView = 'kanban';
+                kanbanView.style.display = 'grid';
+                tableView.style.display = 'none';
+                toggleBtn.innerHTML = '<span>📊</span> Visão Planilha';
+            }
+        }
+
         // Carregar dados do localStorage
         function loadData() {
             const storedClients = localStorage.getItem('clientdeck-clients');
@@ -1031,6 +1200,11 @@
             
             if (storedClients) {
                 clients = JSON.parse(storedClients);
+                // Migrar dados antigos se necessário
+                clients.forEach(client => {
+                    if (!client.completedAt) client.completedAt = null;
+                    if (!client.observationLastEdited) client.observationLastEdited = null;
+                });
             }
             
             if (storedTemplates) {
@@ -1064,13 +1238,23 @@
 
         // Filtrar clientes
         function filterClients(query) {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                const clientName = card.querySelector('h3').textContent.toLowerCase();
-                const templateName = card.querySelector('.template-name').textContent.toLowerCase();
-                const matches = clientName.includes(query) || templateName.includes(query);
-                card.style.display = matches ? 'block' : 'none';
-            });
+            if (currentView === 'kanban') {
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    const clientName = card.querySelector('h3').textContent.toLowerCase();
+                    const templateName = card.querySelector('.template-name').textContent.toLowerCase();
+                    const matches = clientName.includes(query) || templateName.includes(query);
+                    card.style.display = matches ? 'block' : 'none';
+                });
+            } else {
+                const rows = document.querySelectorAll('#clientsTableBody tr');
+                rows.forEach(row => {
+                    const clientName = row.cells[0].textContent.toLowerCase();
+                    const templateName = row.cells[1].textContent.toLowerCase();
+                    const matches = clientName.includes(query) || templateName.includes(query);
+                    row.style.display = matches ? '' : 'none';
+                });
+            }
         }
 
         // Limpar busca
@@ -1088,6 +1272,16 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 4000);
+        }
+
+        // Formatar data para exibição
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric'
+            });
         }
 
         // Abrir modal de novo cliente
@@ -1153,12 +1347,15 @@
                 template: selectedTemplateId,
                 status: 'todo',
                 responses: {},
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                completedAt: null,
+                observationLastEdited: null
             };
 
             clients.push(client);
             saveData();
             renderClients();
+            renderTableView();
             updateStats();
             
             document.getElementById('newClientForm').reset();
@@ -1180,6 +1377,46 @@
             });
         }
 
+        // Renderizar visão de tabela
+        function renderTableView() {
+            const tbody = document.getElementById('clientsTableBody');
+            tbody.innerHTML = '';
+
+            clients.forEach(client => {
+                const template = templates[client.template];
+                if (!template) return;
+
+                const progress = calculateProgress(client);
+                const row = document.createElement('tr');
+                row.style.cursor = 'pointer';
+                row.onclick = () => openChecklistModal(client.id);
+
+                const statusLabels = {
+                    'todo': 'A Fazer',
+                    'progress': 'Em Andamento',
+                    'done': 'Concluído'
+                };
+
+                row.innerHTML = `
+                    <td>${client.name}</td>
+                    <td>${template.name}</td>
+                    <td><span class="status-badge status-${client.status}">${statusLabels[client.status]}</span></td>
+                    <td>
+                        <div class="progress-cell">
+                            <div class="progress-bar-mini">
+                                <div class="progress-fill-mini" style="width: ${progress}%"></div>
+                            </div>
+                            <span>${progress}%</span>
+                        </div>
+                    </td>
+                    <td>${formatDate(client.createdAt)}</td>
+                    <td>${formatDate(client.completedAt)}</td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+
         // Criar elemento de card
         function createCardElement(client) {
             const card = document.createElement('div');
@@ -1194,7 +1431,8 @@
             }
 
             const progress = calculateProgress(client);
-            const createdDate = new Date(client.createdAt).toLocaleDateString('pt-BR');
+            const createdDate = formatDate(client.createdAt);
+            const completedDate = formatDate(client.completedAt);
 
             card.innerHTML = `
                 <h3>${client.name}</h3>
@@ -1204,8 +1442,11 @@
                 </div>
                 <div class="progress-text">${progress}% completo</div>
                 <div class="card-meta">
-                    <span>📅 ${createdDate}</span>
                     <span>📝 ${template.items.length} itens</span>
+                </div>
+                <div class="dates-info">
+                    <div>📅 Início: ${createdDate}</div>
+                    ${client.completedAt ? `<div>✅ Fim: ${completedDate}</div>` : ''}
                 </div>
             `;
 
@@ -1224,6 +1465,43 @@
             
             if (checkboxItems.length === 0) return 0;
             return Math.round((completedItems.length / checkboxItems.length) * 100);
+        }
+
+        // Função para atualizar status automaticamente baseado no progresso
+        function updateStatusByProgress(client) {
+            const progress = calculateProgress(client);
+            let newStatus = client.status;
+            
+            if (progress === 100) {
+                newStatus = 'done';
+                // Preencher data de conclusão se não existir
+                if (!client.completedAt) {
+                    client.completedAt = new Date().toISOString();
+                }
+            } else if (progress > 0) {
+                newStatus = 'progress';
+                // Remover data de conclusão se não estiver 100%
+                client.completedAt = null;
+            } else {
+                newStatus = 'todo';
+                // Remover data de conclusão se voltar a 0%
+                client.completedAt = null;
+            }
+
+            // Atualizar status se mudou
+            if (client.status !== newStatus) {
+                const statusNames = {
+                    'todo': 'A Fazer',
+                    'progress': 'Em Andamento',
+                    'done': 'Concluído'
+                };
+                
+                client.status = newStatus;
+                showToast(`🔄 ${client.name} movido automaticamente para "${statusNames[newStatus]}"`);
+                return true;
+            }
+            
+            return false;
         }
 
         // Abrir modal de checklist
@@ -1276,8 +1554,18 @@
             const client = clients.find(c => c.id === currentClientId);
             if (client) {
                 client.responses[itemId] = value;
+                
+                // Verificar se é o campo de observações e atualizar data
+                if (itemId === 'observacoes' && value && value.trim() !== '') {
+                    client.observationLastEdited = new Date().toISOString();
+                }
+                
+                // Atualizar status automaticamente baseado no progresso
+                const statusChanged = updateStatusByProgress(client);
+                
                 saveData();
                 renderClients();
+                renderTableView();
                 updateStats();
             }
         }
@@ -1291,12 +1579,15 @@
                     id: Date.now(),
                     name: client.name + ' (Cópia)',
                     responses: {},
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    completedAt: null,
+                    observationLastEdited: null
                 };
                 
                 clients.push(newClient);
                 saveData();
                 renderClients();
+                renderTableView();
                 updateStats();
                 closeModal('checklistModal');
                 showToast('✅ Cliente duplicado com sucesso!');
@@ -1309,6 +1600,7 @@
                 clients = clients.filter(c => c.id !== currentClientId);
                 saveData();
                 renderClients();
+                renderTableView();
                 updateStats();
                 closeModal('checklistModal');
                 showToast('✅ Cliente excluído com sucesso!');
@@ -1507,7 +1799,7 @@
                         <option value="text">Texto</option>
                         <option value="textarea">Texto Longo</option>
                     </select>
-                    <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                                        <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
                 </div>
             `;
             
@@ -1578,9 +1870,17 @@
                         if (confirm('⚠️ Isso substituirá todos os dados atuais. Continuar?')) {
                             clients = data.clients;
                             templates = data.templates;
+                            
+                            // Migrar dados se necessário
+                            clients.forEach(client => {
+                                if (!client.completedAt) client.completedAt = null;
+                                if (!client.observationLastEdited) client.observationLastEdited = null;
+                            });
+                            
                             saveData();
                             saveTemplates();
                             renderClients();
+                            renderTableView();
                             updateStats();
                             showToast('✅ Dados importados com sucesso!');
                         }
@@ -1644,8 +1944,17 @@
                             };
                             
                             client.status = columnId;
+                            
+                            // Atualizar data de conclusão se movido para "done"
+                            if (columnId === 'done' && !client.completedAt) {
+                                client.completedAt = new Date().toISOString();
+                            } else if (columnId !== 'done') {
+                                client.completedAt = null;
+                            }
+                            
                             saveData();
                             renderClients();
+                            renderTableView();
                             updateStats();
                             showToast(`✅ ${client.name} movido para "${statusNames[columnId]}"`);
                         }
