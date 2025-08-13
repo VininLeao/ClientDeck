@@ -260,6 +260,74 @@
             background: #161b22;
         }
 
+        .client-row {
+            cursor: pointer;
+        }
+
+        .client-row:hover {
+            background: #161b22;
+        }
+
+        .detail-row {
+            display: none;
+            background: #0d1117;
+        }
+
+        .detail-row.expanded {
+            display: table-row;
+        }
+
+        .detail-row td {
+            padding: 8px 16px;
+            border-left: 3px solid #58a6ff;
+            background: #0a0f16;
+            font-size: 0.8rem;
+        }
+
+        .expand-btn {
+            background: none;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .expand-btn:hover {
+            color: #f0f6fc;
+            background: #30363d;
+        }
+
+        .expand-btn.expanded {
+            color: #58a6ff;
+        }
+
+        .checklist-question {
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 4px;
+        }
+
+        .checklist-answer {
+            color: #8b949e;
+            font-size: 0.75rem;
+        }
+
+        .checklist-answer.completed {
+            color: #56d364;
+        }
+
+        .checklist-answer.incomplete {
+            color: #ff6b6b;
+        }
+
         .status-badge {
             padding: 4px 8px;
             border-radius: 4px;
@@ -955,6 +1023,7 @@
         <table id="clientsTable">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Nome do Cliente</th>
                     <th>Template</th>
                     <th>Status</th>
@@ -1193,6 +1262,28 @@
             }
         }
 
+        // Função para expandir/recolher detalhes do cliente na tabela
+        function toggleClientDetails(clientId, button) {
+            const detailRows = document.querySelectorAll(`[data-parent="${clientId}"]`);
+            const isExpanded = button.classList.contains('expanded');
+            
+            detailRows.forEach(row => {
+                if (isExpanded) {
+                    row.classList.remove('expanded');
+                } else {
+                    row.classList.add('expanded');
+                }
+            });
+            
+            if (isExpanded) {
+                button.classList.remove('expanded');
+                button.textContent = '+';
+            } else {
+                button.classList.add('expanded');
+                button.textContent = '−';
+            }
+        }
+
         // Carregar dados do localStorage
         function loadData() {
             const storedClients = localStorage.getItem('clientdeck-clients');
@@ -1247,12 +1338,21 @@
                     card.style.display = matches ? 'block' : 'none';
                 });
             } else {
-                const rows = document.querySelectorAll('#clientsTableBody tr');
+                const rows = document.querySelectorAll('#clientsTableBody tr.client-row');
                 rows.forEach(row => {
-                    const clientName = row.cells[0].textContent.toLowerCase();
-                    const templateName = row.cells[1].textContent.toLowerCase();
+                    const clientName = row.cells[1].textContent.toLowerCase();
+                    const templateName = row.cells[2].textContent.toLowerCase();
                     const matches = clientName.includes(query) || templateName.includes(query);
+                    const clientId = row.dataset.clientId;
+                    
+                    // Mostrar/esconder linha principal
                     row.style.display = matches ? '' : 'none';
+                    
+                    // Mostrar/esconder linhas de detalhes
+                    const detailRows = document.querySelectorAll(`[data-parent="${clientId}"]`);
+                    detailRows.forEach(detailRow => {
+                        detailRow.style.display = matches ? '' : 'none';
+                    });
                 });
             }
         }
@@ -1387,9 +1487,11 @@
                 if (!template) return;
 
                 const progress = calculateProgress(client);
-                const row = document.createElement('tr');
-                row.style.cursor = 'pointer';
-                row.onclick = () => openChecklistModal(client.id);
+                
+                // Linha principal do cliente
+                const clientRow = document.createElement('tr');
+                clientRow.className = 'client-row';
+                clientRow.dataset.clientId = client.id;
 
                 const statusLabels = {
                     'todo': 'A Fazer',
@@ -1397,7 +1499,10 @@
                     'done': 'Concluído'
                 };
 
-                row.innerHTML = `
+                clientRow.innerHTML = `
+                    <td>
+                        <button class="expand-btn" onclick="toggleClientDetails(${client.id}, this)">+</button>
+                    </td>
                     <td>${client.name}</td>
                     <td>${template.name}</td>
                     <td><span class="status-badge status-${client.status}">${statusLabels[client.status]}</span></td>
@@ -1413,7 +1518,40 @@
                     <td>${formatDate(client.completedAt)}</td>
                 `;
 
-                tbody.appendChild(row);
+                tbody.appendChild(clientRow);
+
+                // Linhas de detalhes do checklist
+                template.items.forEach(item => {
+                    const detailRow = document.createElement('tr');
+                    detailRow.className = 'detail-row';
+                    detailRow.dataset.parent = client.id;
+
+                    let answerContent = '';
+                    let answerClass = '';
+                    const response = client.responses[item.id];
+
+                    if (item.type === 'checkbox') {
+                        if (response === true) {
+                            answerContent = '✅ Sim';
+                            answerClass = 'completed';
+                        } else {
+                            answerContent = '❌ Não';
+                            answerClass = 'incomplete';
+                        }
+                    } else {
+                        answerContent = response || 'Não preenchido';
+                        answerClass = response ? 'completed' : 'incomplete';
+                    }
+
+                    detailRow.innerHTML = `
+                        <td colspan="7">
+                            <div class="checklist-question">${item.text}</div>
+                            <div class="checklist-answer ${answerClass}">${answerContent}</div>
+                        </td>
+                    `;
+
+                    tbody.appendChild(detailRow);
+                });
             });
         }
 
@@ -1666,7 +1804,7 @@
                     <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
                 `;
                 
-                container.appendChild(div);
+                                container.appendChild(div);
             });
             
             document.getElementById('editTemplateModal').style.display = 'block';
@@ -1799,7 +1937,7 @@
                         <option value="text">Texto</option>
                         <option value="textarea">Texto Longo</option>
                     </select>
-                                        <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
                 </div>
             `;
             
