@@ -40,12 +40,177 @@
             color: #8b949e;
         }
 
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #161b22, #1c2128);
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            min-width: 120px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .stat-item.todo {
+            background: rgba(248, 81, 73, 0.08);
+            border: 1px solid rgba(248, 81, 73, 0.2);
+        }
+
+        .stat-item.todo::before {
+            background: linear-gradient(90deg, #f85149, #ff6b6b);
+        }
+
+        .stat-item.progress {
+            background: rgba(210, 153, 34, 0.08);
+            border: 1px solid rgba(210, 153, 34, 0.2);
+        }
+
+        .stat-item.progress::before {
+            background: linear-gradient(90deg, #d29922, #ffc107);
+        }
+
+        .stat-item.done {
+            background: rgba(63, 185, 80, 0.08);
+            border: 1px solid rgba(63, 185, 80, 0.2);
+        }
+
+        .stat-item.done::before {
+            background: linear-gradient(90deg, #3fb950, #56d364);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-item.todo .stat-number {
+            background: linear-gradient(135deg, #f85149, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-item.progress .stat-number {
+            background: linear-gradient(135deg, #d29922, #ffc107);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-item.done .stat-number {
+            background: linear-gradient(135deg, #3fb950, #56d364);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #8b949e;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .stat-icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+            position: relative;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: #f0f6fc;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+            background: #161b22;
+        }
+
+        .search-box .clear-search {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .search-box .clear-search:hover {
+            color: #f0f6fc;
+            background: #30363d;
+        }
+
         .controls {
             display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #161b22, #1c2128);
+            border: 1px solid #30363d;
+            border-radius: 12px;
             flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .controls-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .btn {
@@ -99,6 +264,19 @@
             box-shadow: 0 6px 20px rgba(48, 54, 61, 0.3);
         }
 
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid #30363d;
+            color: #8b949e;
+        }
+
+        .btn-ghost:hover {
+            background: #21262d;
+            border-color: #58a6ff;
+            color: #f0f6fc;
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.2);
+        }
+
         .btn-danger {
             background: #da3633;
             border: 1px solid #f85149;
@@ -124,104 +302,67 @@
             justify-content: center;
         }
 
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 15px 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #161b22, #1c2128);
-            border-radius: 12px;
-            border: 1px solid #30363d;
-            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            background: rgba(88, 166, 255, 0.1);
-            min-width: 100px;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            display: block;
-            background: linear-gradient(135deg, #58a6ff, #a5a5f5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #8b949e;
-            font-weight: 500;
-        }
-
-        .search-box {
-            margin-bottom: 20px;
+        .dropdown {
             position: relative;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+            display: inline-block;
         }
 
-        .search-box input {
-            width: 100%;
-            padding: 12px 40px 12px 16px;
-            background: #21262d;
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: #0d1117;
+            min-width: 180px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
             border: 1px solid #30363d;
             border-radius: 8px;
-            color: #f0f6fc;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            z-index: 1000;
+            top: 100%;
+            left: 0;
+            margin-top: 4px;
         }
 
-        .search-box input:focus {
-            outline: none;
-            border-color: #58a6ff;
-            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
-            background: #161b22;
+        .dropdown-content.show {
+            display: block;
         }
 
-        .search-box .clear-search {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #8b949e;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 4px;
-            border-radius: 3px;
-            transition: all 0.2s ease;
-        }
-
-        .search-box .clear-search:hover {
-            color: #f0f6fc;
-            background: #30363d;
-        }
-
-        .filters {
+        .dropdown-item {
+            color: #e6edf3;
+            padding: 12px 16px;
+            text-decoration: none;
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: #21262d;
+            color: #58a6ff;
+        }
+
+        .dropdown-item:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dropdown-item:last-child {
+            border-radius: 0 0 8px 8px;
         }
 
         .filter-label {
             color: #f0f6fc;
             font-weight: 600;
             font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .filter-dropdown {
-            min-width: 200px;
+            min-width: 180px;
             padding: 8px 12px;
             background: #21262d;
             border: 1px solid #30363d;
@@ -242,11 +383,6 @@
             border-color: #58a6ff;
             box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
             background-color: #161b22;
-        }
-
-        .view-toggle {
-            text-align: center;
-            margin-bottom: 20px;
         }
 
         .kanban-board {
@@ -322,7 +458,7 @@
         }
 
         .detail-row td {
-            padding: 8px 16px;
+            padding: 16px;
             border-left: 3px solid #58a6ff;
             background: #0a0f16;
             font-size: 0.8rem;
@@ -342,6 +478,13 @@
         .detail-row.editing td {
             background: #1a0e0a;
             border-left: 3px solid #f78166;
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 16px;
+            align-items: flex-start;
         }
 
         .expand-btn {
@@ -445,6 +588,13 @@
             font-size: 0.7rem;
             color: #f78166;
             margin-left: 8px;
+            font-style: italic;
+        }
+
+        .last-edited {
+            font-size: 0.7rem;
+            color: #8b949e;
+            margin-top: 4px;
             font-style: italic;
         }
 
@@ -695,7 +845,7 @@
             padding: 25px;
             border-radius: 12px;
             width: 90%;
-            max-width: 700px;
+            max-width: 800px;
             max-height: 85vh;
             overflow-y: auto;
             animation: modalSlideIn 0.4s ease;
@@ -857,6 +1007,54 @@
             background: #161b22;
         }
 
+        .tab-container {
+            margin-bottom: 25px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button.active {
+            color: #58a6ff;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #58a6ff;
+        }
+
+        .tab-button:hover:not(.active) {
+            color: #f0f6fc;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .template-builder {
             background: #161b22;
             border: 1px solid #30363d;
@@ -887,10 +1085,34 @@
             padding: 15px;
             margin-bottom: 15px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .template-question-block:hover {
             border-color: #58a6ff;
+        }
+
+        .template-remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #da3633;
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .template-remove-btn:hover {
+            background: #f85149;
+            transform: scale(1.1);
         }
 
         .template-item {
@@ -899,6 +1121,7 @@
             align-items: flex-start;
             flex-wrap: wrap;
             margin-bottom: 12px;
+            padding-right: 40px;
         }
 
         .template-item input[type="text"] {
@@ -924,8 +1147,14 @@
             color: #8b949e;
         }
 
+        .template-item input[type="text"]:disabled {
+            background: #0d1117;
+            color: #8b949e;
+            cursor: not-allowed;
+        }
+
         .template-item select {
-            min-width: 160px;
+            min-width: 180px;
             padding: 10px 35px 10px 12px;
             background: #21262d;
             border: 1px solid #30363d;
@@ -1121,7 +1350,13 @@
 
             .controls {
                 flex-direction: column;
-                align-items: center;
+                align-items: stretch;
+            }
+
+            .controls-left,
+            .controls-right {
+                width: 100%;
+                justify-content: center;
             }
 
             .stats {
@@ -1137,6 +1372,7 @@
                 flex-direction: column;
                 gap: 8px;
                 align-items: stretch;
+                padding-right: 15px;
             }
 
             .template-item select {
@@ -1169,14 +1405,13 @@
                 padding: 8px 12px;
             }
 
-            .filters {
-                flex-direction: column;
-                align-items: center;
+            .detail-content {
+                grid-template-columns: 1fr;
                 gap: 8px;
             }
 
             .filter-dropdown {
-                min-width: 250px;
+                min-width: 150px;
             }
         }
     </style>
@@ -1188,17 +1423,32 @@
     </div>
 
     <div class="stats">
-        <div class="stat-item">
+        <div class="stat-item todo">
             <span class="stat-number" id="todoCount">0</span>
-            <span class="stat-label">🔴 A Fazer</span>
+            <span class="stat-label">
+                <svg class="stat-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                </svg>
+                A Fazer
+            </span>
         </div>
-        <div class="stat-item">
+        <div class="stat-item progress">
             <span class="stat-number" id="progressCount">0</span>
-            <span class="stat-label">🟡 Em Andamento</span>
+            <span class="stat-label">
+                <svg class="stat-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                </svg>
+                Em Andamento
+            </span>
         </div>
-        <div class="stat-item">
+        <div class="stat-item done">
             <span class="stat-number" id="doneCount">0</span>
-            <span class="stat-label">🟢 Concluído</span>
+            <span class="stat-label">
+                <svg class="stat-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                Concluído
+            </span>
         </div>
     </div>
 
@@ -1208,33 +1458,40 @@
     </div>
 
     <div class="controls">
-        <button class="btn" onclick="openNewClientModal()">
-            <span>👤</span> Novo Cliente
-        </button>
-        <button class="btn btn-secondary" onclick="openTemplateModal()">
-            <span>⚙️</span> Templates
-        </button>
-        <button class="btn btn-secondary" onclick="exportData()">
-            <span>📥</span> Exportar
-        </button>
-        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
-            <span>📤</span> Importar
-        </button>
-        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
-    </div>
+        <div class="controls-left">
+            <button class="btn" onclick="openNewClientModal()">
+                <span>👤</span> Novo Cliente
+            </button>
+            
+            <div class="dropdown">
+                <button class="btn btn-secondary" onclick="toggleDropdown('actionsDropdown')">
+                    <span>⚙️</span> Ações <span>▼</span>
+                </button>
+                <div id="actionsDropdown" class="dropdown-content">
+                    <button class="dropdown-item" onclick="openTemplateModal(); closeDropdown('actionsDropdown')">
+                        <span>📋</span> Templates
+                    </button>
+                    <button class="dropdown-item" onclick="exportData(); closeDropdown('actionsDropdown')">
+                        <span>📥</span> Exportar
+                    </button>
+                    <button class="dropdown-item" onclick="document.getElementById('importFile').click(); closeDropdown('actionsDropdown')">
+                        <span>📤</span> Importar
+                    </button>
+                </div>
+            </div>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
+        </div>
 
-    <div class="filters">
-        <span class="filter-label">📂 Filtrar por Template:</span>
-        <select class="filter-dropdown" id="templateFilter" onchange="filterByTemplate(this.value)">
-            <option value="all">Todos os Templates</option>
-            <!-- Opções de template serão inseridas aqui -->
-        </select>
-    </div>
-
-    <div class="view-toggle">
-        <button class="btn btn-secondary" id="tableToggleBtn" onclick="toggleTableView()">
-            <span>📊</span> Mostrar Planilha
-        </button>
+        <div class="controls-right">
+            <span class="filter-label">📂 Filtrar:</span>
+            <select class="filter-dropdown" id="templateFilter" onchange="filterByTemplate(this.value)">
+                <option value="all">Todos os Templates</option>
+            </select>
+            
+            <button class="btn btn-secondary" id="tableToggleBtn" onclick="toggleTableView()">
+                <span>📊</span> Planilha
+            </button>
+        </div>
     </div>
 
     <div class="keyboard-shortcut">
@@ -1291,7 +1548,7 @@
                     </div>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('newClientModal')">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('newClientModal')">
                         Cancelar
                     </button>
                     <button type="submit" class="btn">
@@ -1310,93 +1567,74 @@
                 <span class="close" onclick="closeModal('templateModal')">&times;</span>
             </div>
             
-            <div class="template-builder">
-                <h3>➕ Criar Novo Template</h3>
-                <div class="form-group">
-                    <label for="templateName">Nome do Template:</label>
-                    <input type="text" id="templateName" placeholder="Ex: Onboarding Shopify">
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="switchTab('myTemplates')">Meus Templates</button>
+                    <button class="tab-button" onclick="switchTab('templateEditor')">Editor de Template</button>
                 </div>
-                <div class="form-group">
-                    <label>Perguntas do Checklist:</label>
-                    <div class="template-items-container">
-                        <div id="templateItems">
-                            <div class="template-question-block">
-                                <div class="template-item">
-                                    <input type="text" placeholder="Digite uma pergunta..." required>
-                                    <select onchange="handleTypeChange(this)">
-                                        <option value="checkbox">Sim/Não</option>
-                                        <option value="text">Texto</option>
-                                        <option value="textarea">Texto Longo</option>
-                                        <option value="date">Data</option>
-                                        <option value="number">Número</option>
-                                        <option value="url">Link</option>
-                                        <option value="select">Lista de Opções</option>
-                                    </select>
-                                </div>
-                                <div class="template-item-controls">
-                                    <div class="required-checkbox">
-                                        <input type="checkbox" id="req-new-0">
-                                        <label for="req-new-0">Obrigatório</label>
-                                    </div>
-                                    <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
-                                </div>
-                            </div>
+
+                <div id="myTemplates" class="tab-content active">
+                    <div class="templates-list">
+                        <div id="existingTemplates">
+                            <!-- Templates existentes serão listados aqui -->
                         </div>
                     </div>
-                    <button type="button" class="btn btn-secondary btn-small" onclick="addTemplateItem()">
-                        ➕ Adicionar Pergunta
-                    </button>
                 </div>
-                <button type="button" class="btn" onclick="saveTemplate()">
-                    <span>💾</span> Salvar Template
-                </button>
-            </div>
 
-            <div class="templates-list">
-                <h3>📋 Templates Existentes</h3>
-                <div id="existingTemplates">
-                    <!-- Templates existentes serão listados aqui -->
+                <div id="templateEditor" class="tab-content">
+                    <div class="template-builder">
+                        <h3 id="editorTitle">➕ Criar Novo Template</h3>
+                        <div class="form-group">
+                            <label for="templateName">Nome do Template:</label>
+                            <input type="text" id="templateName" placeholder="Ex: Onboarding Shopify">
+                        </div>
+                        <div class="form-group">
+                            <label>Perguntas do Checklist:</label>
+                            <div class="template-items-container">
+                                <div id="templateItems">
+                                    <div class="template-question-block">
+                                        <button type="button" class="template-remove-btn" onclick="removeTemplateItem(this)">🗑️</button>
+                                        <div class="template-item">
+                                            <input type="text" placeholder="Digite uma pergunta..." required>
+                                            <select onchange="handleTypeChange(this)">
+                                                <option value="checkbox">Sim/Não</option>
+                                                <option value="text">Texto</option>
+                                                <option value="textarea">Texto Longo</option>
+                                                <option value="date">Data</option>
+                                                <option value="number">Número</option>
+                                                <option value="url">Link</option>
+                                                <option value="select">Lista de Opções</option>
+                                                <option value="observacoes">Campo de Observações</option>
+                                            </select>
+                                        </div>
+                                        <div class="template-item-controls">
+                                            <div class="required-checkbox">
+                                                <input type="checkbox" id="req-new-0">
+                                                <label for="req-new-0">Obrigatório</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-small" onclick="addTemplateItem()">
+                                ➕ Adicionar Pergunta
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 12px;">
+                            <button type="button" class="btn" onclick="saveTemplate()">
+                                <span>💾</span> Salvar Template
+                            </button>
+                            <button type="button" class="btn btn-ghost" onclick="cancelTemplateEdit()">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="modal-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeModal('templateModal')">
                     Fechar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para editar template -->
-    <div id="editTemplateModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>✏️ Editar Template</h2>
-                <span class="close" onclick="closeModal('editTemplateModal')">&times;</span>
-            </div>
-            
-            <div class="form-group">
-                <label for="editTemplateName">Nome do Template:</label>
-                <input type="text" id="editTemplateName" placeholder="Ex: Onboarding Shopify">
-            </div>
-            <div class="form-group">
-                <label>Perguntas do Checklist:</label>
-                <div class="template-items-container">
-                    <div id="editTemplateItems">
-                        <!-- Items do template sendo editado -->
-                    </div>
-                </div>
-                <button type="button" class="btn btn-secondary btn-small" onclick="addEditTemplateItem()">
-                    ➕ Adicionar Pergunta
-                </button>
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('editTemplateModal')">
-                    Cancelar
-                </button>
-                <button type="button" class="btn" onclick="updateTemplate()">
-                    <span>💾</span> Salvar Alterações
                 </button>
             </div>
         </div>
@@ -1440,7 +1678,7 @@
                     { id: 'pagamento', text: 'Método de pagamento confirmado?', type: 'checkbox', isRequired: true },
                     { id: 'produtos', text: 'Subiu produtos?', type: 'checkbox', isRequired: false },
                     { id: 'quantidade-produtos', text: 'Quantos produtos?', type: 'number', isRequired: false },
-                    { id: 'observacoes', text: 'Observações (dia em que editou)', type: 'textarea', isRequired: false }
+                    { id: 'observacoes', text: 'Observações', type: 'observacoes', isRequired: false }
                 ],
                 isDefault: true
             }
@@ -1454,8 +1692,8 @@
         let editingTemplateId = null;
         let currentFilter = 'all';
         let tableVisible = false;
-        let expandedClientIds = new Set(); // Gerenciar estado de expansão
-        let currentEditingRow = null; // Controlar qual linha está sendo editada
+        let expandedClientIds = new Set();
+        let currentEditingRow = null;
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -1467,37 +1705,71 @@
             setupDragAndDrop();
             setupSearch();
             setupKeyboardShortcuts();
+            setupDropdowns();
         });
+
+        // Configurar dropdowns
+        function setupDropdowns() {
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            });
+        }
+
+        // Alternar dropdown
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('show');
+        }
+
+        // Fechar dropdown
+        function closeDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.remove('show');
+        }
+
+        // Alternar abas
+        function switchTab(tabName) {
+            // Remover classe ativa de todos os botões e conteúdos
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Ativar aba selecionada
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'myTemplates') {
+                loadExistingTemplates();
+            }
+        }
 
         // Configurar atalhos de teclado
         function setupKeyboardShortcuts() {
             document.addEventListener('keydown', function(e) {
-                // Alt+N para novo cliente
                 if (e.altKey && e.key === 'n') {
                     e.preventDefault();
                     openNewClientModal();
                 }
-                // Escape para fechar modais e cancelar edição
                 if (e.key === 'Escape') {
                     e.preventDefault();
-                    // Cancelar edição inline se houver
                     if (currentEditingRow) {
                         cancelInlineEdit();
                     }
-                    // Fechar modais
                     document.querySelectorAll('.modal').forEach(modal => {
                         if (modal.style.display === 'block') {
                             modal.style.display = 'none';
                         }
                     });
                 }
-                // Enter para confirmar em modais
                 if (e.key === 'Enter' && e.ctrlKey) {
                     const activeModal = Array.from(document.querySelectorAll('.modal')).find(modal => 
                         modal.style.display === 'block'
                     );
                     if (activeModal) {
-                        const submitBtn = activeModal.querySelector('button[type="submit"], .btn:not(.btn-secondary):not(.btn-danger)');
+                        const submitBtn = activeModal.querySelector('button[type="submit"], .btn:not(.btn-secondary):not(.btn-danger):not(.btn-ghost)');
                         if (submitBtn) {
                             submitBtn.click();
                         }
@@ -1515,10 +1787,10 @@
             
             if (tableVisible) {
                 tableView.classList.remove('hidden');
-                toggleBtn.innerHTML = '<span>📋</span> Ocultar Planilha';
+                toggleBtn.innerHTML = '<span>📋</span> Ocultar';
             } else {
                 tableView.classList.add('hidden');
-                toggleBtn.innerHTML = '<span>📊</span> Mostrar Planilha';
+                toggleBtn.innerHTML = '<span>📊</span> Planilha';
             }
         }
 
@@ -1526,24 +1798,21 @@
         function renderTemplateFilters() {
             const dropdown = document.getElementById('templateFilter');
             
-            // Limpar opções existentes (exceto a primeira)
             while (dropdown.children.length > 1) {
                 dropdown.removeChild(dropdown.lastChild);
             }
 
-            // Adicionar opção para cada template
             Object.keys(templates).forEach(templateId => {
                 const template = templates[templateId];
                 const option = document.createElement('option');
                 option.value = templateId;
-                option.textContent = template.name;
+                                option.textContent = template.name;
                 if (templateId === currentFilter) {
                     option.selected = true;
                 }
                 dropdown.appendChild(option);
             });
 
-            // Atualizar dropdown para o filtro atual
             dropdown.value = currentFilter;
         }
 
@@ -1585,10 +1854,21 @@
         // Função para lidar com mudança de tipo no template
         function handleTypeChange(selectElement) {
             const questionBlock = selectElement.closest('.template-question-block');
+            const textInput = questionBlock.querySelector('input[type="text"]');
             const existingOptionsInput = questionBlock.querySelector('.options-input');
             
             if (existingOptionsInput) {
                 existingOptionsInput.remove();
+            }
+
+            if (selectElement.value === 'observacoes') {
+                textInput.value = 'Observações';
+                textInput.disabled = true;
+            } else {
+                textInput.disabled = false;
+                if (textInput.value === 'Observações') {
+                    textInput.value = '';
+                }
             }
 
             if (selectElement.value === 'select') {
@@ -1604,7 +1884,6 @@
 
         // Função para expandir/recolher detalhes do cliente na tabela
         function toggleClientDetails(clientId, event) {
-            // Evitar propagação se clicou diretamente no botão
             if (event && event.target.classList.contains('expand-btn')) {
                 return;
             }
@@ -1634,12 +1913,10 @@
 
         // Nova função de edição inline não-destrutiva
         function enableInlineEdit(element, clientId, itemId, itemType) {
-            // Cancelar edição anterior se houver
             if (currentEditingRow && currentEditingRow !== element) {
                 cancelInlineEdit();
             }
 
-            // Se já está editando esta linha, não fazer nada
             if (currentEditingRow === element) {
                 return;
             }
@@ -1655,10 +1932,8 @@
             const questionDiv = element.querySelector('.checklist-question');
             const answerDiv = element.querySelector('.checklist-answer');
             
-            // Esconder apenas a resposta, mantendo a pergunta visível
             answerDiv.style.display = 'none';
             
-            // Adicionar indicador de edição à pergunta
             if (!questionDiv.querySelector('.editing-indicator')) {
                 const indicator = document.createElement('span');
                 indicator.className = 'editing-indicator';
@@ -1694,6 +1969,12 @@
                         input.appendChild(opt);
                     });
                 }
+            } else if (itemType === 'observacoes') {
+                input = document.createElement('textarea');
+                input.value = currentValue;
+                input.className = 'inline-edit';
+                input.placeholder = 'Digite suas observações...';
+                input.style.minHeight = '80px';
             } else {
                 input = document.createElement('input');
                 input.type = itemType === 'textarea' ? 'text' : itemType;
@@ -1712,22 +1993,17 @@
                 
                 client.responses[itemId] = newValue;
                 
-                // Verificar se é o campo de observações e atualizar data
-                if (itemId === 'observacoes' && newValue && newValue.toString().trim() !== '') {
+                if (itemType === 'observacoes' && newValue && newValue.toString().trim() !== '') {
                     client.observationLastEdited = new Date().toISOString();
                 }
                 
-                // Atualizar status automaticamente baseado no progresso
                 updateStatusByProgress(client);
                 
                 saveData();
                 renderClients();
-                
-                // Renderizar tabela mantendo o estado de expansão
                 renderTableViewPreservingState();
                 updateStats();
                 
-                // Limpar estado de edição
                 currentEditingRow = null;
             };
 
@@ -1737,7 +2013,7 @@
 
             input.onblur = saveEdit;
             input.onkeydown = (e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && itemType !== 'observacoes') {
                     e.preventDefault();
                     saveEdit();
                 } else if (e.key === 'Escape') {
@@ -1746,7 +2022,6 @@
                 }
             };
 
-            // Adicionar o input após a pergunta
             element.appendChild(input);
             input.focus();
         }
@@ -1763,17 +2038,14 @@
             const editingIndicator = questionDiv.querySelector('.editing-indicator');
             const input = currentEditingRow.querySelector('.inline-edit, .inline-edit-select, .inline-edit-checkbox');
 
-            // Remover indicador de edição
             if (editingIndicator) {
                 editingIndicator.remove();
             }
 
-            // Remover input
             if (input) {
                 input.remove();
             }
 
-            // Mostrar resposta novamente
             answerDiv.style.display = 'block';
 
             currentEditingRow = null;
@@ -1794,7 +2066,6 @@
 
                 const progress = calculateProgress(client);
                 
-                // Linha principal do cliente
                 const clientRow = document.createElement('tr');
                 clientRow.className = 'client-row';
                 clientRow.dataset.clientId = client.id;
@@ -1814,7 +2085,7 @@
                     <td>
                         <button class="expand-btn ${isExpanded ? 'expanded' : ''}">${expandIcon}</button>
                     </td>
-                                        <td>${client.name}</td>
+                    <td>${client.name}</td>
                     <td>${template.name}</td>
                     <td><span class="status-badge status-${client.status}">${statusLabels[client.status]}</span></td>
                     <td>
@@ -1831,7 +2102,6 @@
 
                 tbody.appendChild(clientRow);
 
-                // Linhas de detalhes do checklist
                 template.items.forEach(item => {
                     const detailRow = document.createElement('tr');
                     detailRow.className = `detail-row ${isExpanded ? 'expanded' : ''}`;
@@ -1854,10 +2124,40 @@
                         answerClass = response ? 'completed' : 'incomplete';
                     }
 
+                    // Criar conteúdo especial para campo de observações
+                    let detailContent = '';
+                    if (item.type === 'observacoes') {
+                        const lastEdited = client.observationLastEdited 
+                            ? formatDateTime(client.observationLastEdited)
+                            : null;
+                        
+                        detailContent = `
+                            <div class="detail-content">
+                                <div>
+                                    <div class="checklist-question">${item.text}${item.isRequired ? ' *' : ''}</div>
+                                </div>
+                                <div>
+                                    <div class="checklist-answer ${answerClass}">${answerContent}</div>
+                                    ${lastEdited ? `<div class="last-edited">Última edição: ${lastEdited}</div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        detailContent = `
+                            <div class="detail-content">
+                                <div>
+                                    <div class="checklist-question">${item.text}${item.isRequired ? ' *' : ''}</div>
+                                </div>
+                                <div>
+                                    <div class="checklist-answer ${answerClass}">${answerContent}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+
                     detailRow.innerHTML = `
                         <td colspan="7" onclick="enableInlineEdit(this, ${client.id}, '${item.id}', '${item.type}')">
-                            <div class="checklist-question">${item.text}${item.isRequired ? ' *' : ''}</div>
-                            <div class="checklist-answer ${answerClass}">${answerContent}</div>
+                            ${detailContent}
                         </td>
                     `;
 
@@ -1866,9 +2166,8 @@
             });
         }
 
-        // Renderizar visão de tabela (função original mantida para compatibilidade)
+        // Renderizar visão de tabela
         function renderTableView() {
-            // Limpar estado de expansão ao renderizar completamente nova
             renderTableViewPreservingState();
         }
 
@@ -1879,7 +2178,6 @@
             
             if (storedClients) {
                 clients = JSON.parse(storedClients);
-                // Migrar dados antigos se necessário
                 clients.forEach(client => {
                     if (!client.completedAt) client.completedAt = null;
                     if (!client.observationLastEdited) client.observationLastEdited = null;
@@ -1888,7 +2186,6 @@
             
             if (storedTemplates) {
                 templates = JSON.parse(storedTemplates);
-                // Migrar templates antigos para incluir isRequired
                 Object.keys(templates).forEach(templateId => {
                     const template = templates[templateId];
                     template.items.forEach(item => {
@@ -1942,10 +2239,8 @@
                 const matches = clientName.includes(query) || templateName.includes(query);
                 const clientId = row.dataset.clientId;
                 
-                // Mostrar/esconder linha principal
                 row.style.display = matches ? '' : 'none';
                 
-                // Mostrar/esconder linhas de detalhes
                 const detailRows = document.querySelectorAll(`[data-parent="${clientId}"]`);
                 detailRows.forEach(detailRow => {
                     detailRow.style.display = matches ? '' : 'none';
@@ -1977,6 +2272,18 @@
                 day: '2-digit',
                 month: '2-digit', 
                 year: 'numeric'
+            });
+        }
+
+        // Formatar data e hora para exibição
+        function formatDateTime(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
         }
 
@@ -2134,7 +2441,6 @@
             let newStatus = client.status;
             
             if (progress === 100) {
-                // Validar campos obrigatórios antes de mover para "done"
                 const validation = validateRequiredFields(client);
                 if (!validation.valid) {
                     showToast(`❌ Preencha todos os campos obrigatórios para concluir: ${validation.missing.join(', ')}`, true);
@@ -2142,21 +2448,17 @@
                 }
                 
                 newStatus = 'done';
-                // Preencher data de conclusão se não existir
                 if (!client.completedAt) {
                     client.completedAt = new Date().toISOString();
                 }
             } else if (progress > 0) {
                 newStatus = 'progress';
-                // Remover data de conclusão se não estiver 100%
                 client.completedAt = null;
             } else {
                 newStatus = 'todo';
-                // Remover data de conclusão se voltar a 0%
                 client.completedAt = null;
             }
 
-            // Atualizar status se mudou
             if (client.status !== newStatus) {
                 const statusNames = {
                     'todo': 'A Fazer',
@@ -2182,6 +2484,9 @@
                     break;
                 case 'textarea':
                     input = `<textarea id="${item.id}" placeholder="Digite aqui..." onchange="updateResponse('${item.id}', this.value)">${value}</textarea>`;
+                    break;
+                case 'observacoes':
+                    input = `<textarea id="${item.id}" placeholder="Digite suas observações..." onchange="updateResponse('${item.id}', this.value)">${value}</textarea>`;
                     break;
                 case 'date':
                     input = `<input type="date" id="${item.id}" value="${value}" onchange="updateResponse('${item.id}', this.value)">`;
@@ -2233,12 +2538,19 @@
                 const input = createInputByType(item, value);
                 const requiredLabel = item.isRequired ? ' <span style="color: #f85149;">*</span>' : '';
 
+                // Adicionar informação de última edição para campo de observações
+                let lastEditedInfo = '';
+                if (item.type === 'observacoes' && client.observationLastEdited) {
+                    lastEditedInfo = `<div class="last-edited">Última edição: ${formatDateTime(client.observationLastEdited)}</div>`;
+                }
+
                 div.innerHTML = `
                     <label>
                         ${item.type === 'checkbox' ? input : ''}
                         ${item.text}${requiredLabel}
                     </label>
                     ${item.type !== 'checkbox' ? input : ''}
+                    ${lastEditedInfo}
                 `;
 
                 content.appendChild(div);
@@ -2253,12 +2565,13 @@
             if (client) {
                 client.responses[itemId] = value;
                 
-                // Verificar se é o campo de observações e atualizar data
-                if (itemId === 'observacoes' && value && value.toString().trim() !== '') {
+                const template = templates[client.template];
+                const item = template.items.find(i => i.id === itemId);
+                
+                if (item && item.type === 'observacoes' && value && value.toString().trim() !== '') {
                     client.observationLastEdited = new Date().toISOString();
                 }
                 
-                // Atualizar status automaticamente baseado no progresso
                 updateStatusByProgress(client);
                 
                 saveData();
@@ -2310,7 +2623,7 @@
         // Abrir modal de templates
         function openTemplateModal() {
             document.getElementById('templateModal').style.display = 'block';
-            loadExistingTemplates();
+            switchTab('myTemplates');
         }
 
         // Carregar templates existentes
@@ -2347,9 +2660,10 @@
             editingTemplateId = templateId;
             const template = templates[templateId];
             
-            document.getElementById('editTemplateName').value = template.name;
+            document.getElementById('editorTitle').textContent = '✏️ Editar Template';
+            document.getElementById('templateName').value = template.name;
             
-            const container = document.getElementById('editTemplateItems');
+            const container = document.getElementById('templateItems');
             container.innerHTML = '';
             
             template.items.forEach((item, index) => {
@@ -2359,10 +2673,13 @@
                 const optionsInput = item.type === 'select' && item.options ? 
                     `<input type="text" class="options-input" value="${item.options.join(', ')}" placeholder="Digite as opções separadas por vírgula">` : '';
                 
+                const isDisabled = item.type === 'observacoes' ? 'disabled' : '';
+                
                 questionBlock.innerHTML = `
+                    <button type="button" class="template-remove-btn" onclick="removeTemplateItem(this)">🗑️</button>
                     <div class="template-item">
-                        <input type="text" value="${item.text}" required>
-                        <select onchange="handleEditTypeChange(this)">
+                        <input type="text" value="${item.text}" ${isDisabled} required>
+                        <select onchange="handleTypeChange(this)">
                             <option value="checkbox" ${item.type === 'checkbox' ? 'selected' : ''}>Sim/Não</option>
                             <option value="text" ${item.type === 'text' ? 'selected' : ''}>Texto</option>
                             <option value="textarea" ${item.type === 'textarea' ? 'selected' : ''}>Texto Longo</option>
@@ -2370,6 +2687,7 @@
                             <option value="number" ${item.type === 'number' ? 'selected' : ''}>Número</option>
                             <option value="url" ${item.type === 'url' ? 'selected' : ''}>Link</option>
                             <option value="select" ${item.type === 'select' ? 'selected' : ''}>Lista de Opções</option>
+                            <option value="observacoes" ${item.type === 'observacoes' ? 'selected' : ''}>Campo de Observações</option>
                         </select>
                     </div>
                     ${optionsInput}
@@ -2378,81 +2696,50 @@
                             <input type="checkbox" id="req-edit-${index}" ${item.isRequired ? 'checked' : ''}>
                             <label for="req-edit-${index}">Obrigatório</label>
                         </div>
-                        <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
                     </div>
                 `;
                 
                 container.appendChild(questionBlock);
             });
             
-            document.getElementById('editTemplateModal').style.display = 'block';
+            switchTab('templateEditor');
         }
 
-        // Função para lidar com mudança de tipo no edit template
-        function handleEditTypeChange(selectElement) {
-            const questionBlock = selectElement.closest('.template-question-block');
-            const existingOptionsInput = questionBlock.querySelector('.options-input');
-            
-            if (existingOptionsInput) {
-                existingOptionsInput.remove();
-            }
-
-            if (selectElement.value === 'select') {
-                const optionsInput = document.createElement('input');
-                optionsInput.type = 'text';
-                optionsInput.className = 'options-input';
-                optionsInput.placeholder = 'Digite as opções separadas por vírgula (ex: Opção A, Opção B, Opção C)';
-                
-                const templateItem = selectElement.closest('.template-item');
-                questionBlock.insertBefore(optionsInput, questionBlock.querySelector('.template-item-controls'));
-            }
+        // Cancelar edição de template
+        function cancelTemplateEdit() {
+            editingTemplateId = null;
+            document.getElementById('editorTitle').textContent = '➕ Criar Novo Template';
+            document.getElementById('templateName').value = '';
+            resetTemplateItems();
+            switchTab('myTemplates');
         }
 
-        // Atualizar template
-        function updateTemplate() {
-            const name = document.getElementById('editTemplateName').value.trim();
-            const items = [];
-            
-            document.querySelectorAll('#editTemplateItems .template-question-block').forEach((block, index) => {
-                const text = block.querySelector('input[type="text"]').value.trim();
-                const type = block.querySelector('select').value;
-                const isRequired = block.querySelector('input[type="checkbox"]').checked;
-                const optionsInput = block.querySelector('.options-input');
-                
-                if (text) {
-                    const itemData = {
-                        id: `item-${Date.now()}-${index}`,
-                        text: text,
-                        type: type,
-                        isRequired: isRequired
-                    };
-                    
-                    if (type === 'select' && optionsInput && optionsInput.value) {
-                        itemData.options = optionsInput.value.split(',').map(opt => opt.trim()).filter(opt => opt);
-                    }
-                    
-                    items.push(itemData);
-                }
-            });
-
-            if (!name || items.length === 0) {
-                showToast('❌ Preencha o nome e adicione pelo menos uma pergunta', true);
-                return;
-            }
-
-            // Preservar isDefault se existir
-            const currentTemplate = templates[editingTemplateId];
-            templates[editingTemplateId] = {
-                name: name,
-                items: items,
-                isDefault: currentTemplate?.isDefault || false
-            };
-
-            saveTemplates();
-            loadExistingTemplates();
-            renderTemplateFilters();
-            closeModal('editTemplateModal');
-            showToast('✅ Template atualizado com sucesso!');
+        // Reset template items
+        function resetTemplateItems() {
+            document.getElementById('templateItems').innerHTML = `
+                <div class="template-question-block">
+                    <button type="button" class="template-remove-btn" onclick="removeTemplateItem(this)">🗑️</button>
+                    <div class="template-item">
+                        <input type="text" placeholder="Digite uma pergunta..." required>
+                        <select onchange="handleTypeChange(this)">
+                            <option value="checkbox">Sim/Não</option>
+                            <option value="text">Texto</option>
+                            <option value="textarea">Texto Longo</option>
+                            <option value="date">Data</option>
+                            <option value="number">Número</option>
+                            <option value="url">Link</option>
+                            <option value="select">Lista de Opções</option>
+                            <option value="observacoes">Campo de Observações</option>
+                        </select>
+                    </div>
+                    <div class="template-item-controls">
+                        <div class="required-checkbox">
+                            <input type="checkbox" id="req-new-0">
+                            <label for="req-new-0">Obrigatório</label>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         // Adicionar item ao template
@@ -2463,6 +2750,7 @@
             questionBlock.className = 'template-question-block';
             
             questionBlock.innerHTML = `
+                <button type="button" class="template-remove-btn" onclick="removeTemplateItem(this)">🗑️</button>
                 <div class="template-item">
                     <input type="text" placeholder="Digite uma pergunta..." required>
                     <select onchange="handleTypeChange(this)">
@@ -2473,6 +2761,7 @@
                         <option value="number">Número</option>
                         <option value="url">Link</option>
                         <option value="select">Lista de Opções</option>
+                        <option value="observacoes">Campo de Observações</option>
                     </select>
                 </div>
                 <div class="template-item-controls">
@@ -2480,39 +2769,6 @@
                         <input type="checkbox" id="req-new-${itemCount}">
                         <label for="req-new-${itemCount}">Obrigatório</label>
                     </div>
-                    <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
-                </div>
-            `;
-            
-            container.appendChild(questionBlock);
-        }
-
-        // Adicionar item ao template (modo edição)
-        function addEditTemplateItem() {
-            const container = document.getElementById('editTemplateItems');
-            const itemCount = container.children.length;
-            const questionBlock = document.createElement('div');
-            questionBlock.className = 'template-question-block';
-            
-            questionBlock.innerHTML = `
-                <div class="template-item">
-                    <input type="text" placeholder="Digite uma pergunta..." required>
-                    <select onchange="handleEditTypeChange(this)">
-                        <option value="checkbox">Sim/Não</option>
-                        <option value="text">Texto</option>
-                        <option value="textarea">Texto Longo</option>
-                        <option value="date">Data</option>
-                        <option value="number">Número</option>
-                        <option value="url">Link</option>
-                        <option value="select">Lista de Opções</option>
-                    </select>
-                </div>
-                <div class="template-item-controls">
-                    <div class="required-checkbox">
-                        <input type="checkbox" id="req-edit-new-${itemCount}">
-                        <label for="req-edit-new-${itemCount}">Obrigatório</label>
-                    </div>
-                    <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
                 </div>
             `;
             
@@ -2521,11 +2777,12 @@
 
         // Remover item do template
         function removeTemplateItem(button) {
-            button.closest('.template-question-block').remove();
-        }
-
-        function removeEditTemplateItem(button) {
-            button.closest('.template-question-block').remove();
+            const container = button.closest('#templateItems');
+            if (container.children.length > 1) {
+                button.closest('.template-question-block').remove();
+            } else {
+                showToast('❌ Deve haver pelo menos uma pergunta no template', true);
+            }
         }
 
         // Salvar template
@@ -2541,7 +2798,7 @@
                 
                 if (text) {
                     const itemData = {
-                        id: `item-${Date.now()}-${index}`,
+                        id: type === 'observacoes' ? 'system_notes_timestamp' : `item-${Date.now()}-${index}`,
                         text: text,
                         type: type,
                         isRequired: isRequired
@@ -2560,44 +2817,33 @@
                 return;
             }
 
-            const templateId = `custom-${Date.now()}`;
-            templates[templateId] = {
-                name: name,
-                items: items,
-                isDefault: false
-            };
+            if (editingTemplateId) {
+                const currentTemplate = templates[editingTemplateId];
+                templates[editingTemplateId] = {
+                    name: name,
+                    items: items,
+                    isDefault: currentTemplate?.isDefault || false
+                };
+                showToast('✅ Template atualizado com sucesso!');
+            } else {
+                const templateId = `custom-${Date.now()}`;
+                templates[templateId] = {
+                    name: name,
+                    items: items,
+                    isDefault: false
+                };
+                showToast('✅ Template criado com sucesso!');
+            }
 
             saveTemplates();
             loadExistingTemplates();
             renderTemplateFilters();
             
-            // Limpar formulário
+            editingTemplateId = null;
+            document.getElementById('editorTitle').textContent = '➕ Criar Novo Template';
             document.getElementById('templateName').value = '';
-            document.getElementById('templateItems').innerHTML = `
-                <div class="template-question-block">
-                    <div class="template-item">
-                        <input type="text" placeholder="Digite uma pergunta..." required>
-                        <select onchange="handleTypeChange(this)">
-                            <option value="checkbox">Sim/Não</option>
-                            <option value="text">Texto</option>
-                            <option value="textarea">Texto Longo</option>
-                            <option value="date">Data</option>
-                            <option value="number">Número</option>
-                            <option value="url">Link</option>
-                            <option value="select">Lista de Opções</option>
-                        </select>
-                    </div>
-                    <div class="template-item-controls">
-                        <div class="required-checkbox">
-                            <input type="checkbox" id="req-new-0">
-                            <label for="req-new-0">Obrigatório</label>
-                        </div>
-                        <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
-                    </div>
-                </div>
-            `;
-            
-            showToast('✅ Template criado com sucesso!');
+            resetTemplateItems();
+            switchTab('myTemplates');
         }
 
         // Excluir template
@@ -2639,7 +2885,7 @@
                 clients: clients,
                 templates: templates,
                 exportDate: new Date().toISOString(),
-                version: '3.1'
+                version: '4.0'
             };
 
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2670,13 +2916,11 @@
                             clients = data.clients;
                             templates = data.templates;
                             
-                            // Migrar dados se necessário
                             clients.forEach(client => {
                                 if (!client.completedAt) client.completedAt = null;
                                 if (!client.observationLastEdited) client.observationLastEdited = null;
                             });
                             
-                            // Migrar templates para incluir isRequired
                             Object.keys(templates).forEach(templateId => {
                                 const template = templates[templateId];
                                 template.items.forEach(item => {
@@ -2686,7 +2930,6 @@
                                 });
                             });
                             
-                            // Limpar estado de expansão
                             expandedClientIds.clear();
                             currentEditingRow = null;
                             
@@ -2751,7 +2994,6 @@
                         const client = clients.find(c => c.id === clientId);
                         
                         if (client && client.status !== columnId) {
-                            // Validar campos obrigatórios se movendo para "done"
                             if (columnId === 'done') {
                                 const validation = validateRequiredFields(client);
                                 if (!validation.valid) {
@@ -2768,7 +3010,6 @@
                             
                             client.status = columnId;
                             
-                            // Atualizar data de conclusão se movido para "done"
                             if (columnId === 'done' && !client.completedAt) {
                                 client.completedAt = new Date().toISOString();
                             } else if (columnId !== 'done') {
@@ -2795,4 +3036,4 @@
     </script>
 </body>
 </html>
-                    
+                
