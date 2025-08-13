@@ -205,6 +205,45 @@
             background: #30363d;
         }
 
+        .filters {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            color: #f0f6fc;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .filter-dropdown {
+            min-width: 200px;
+            padding: 8px 12px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #f0f6fc;
+            font-size: 14px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b949e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 8px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 35px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-dropdown:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+            background-color: #161b22;
+        }
+
         .view-toggle {
             text-align: center;
             margin-bottom: 20px;
@@ -215,11 +254,10 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             max-width: 1400px;
-            margin: 0 auto;
+            margin: 0 auto 30px auto;
         }
 
         .table-view {
-            display: none;
             max-width: 1400px;
             margin: 0 auto;
             background: linear-gradient(135deg, #161b22, #1c2128);
@@ -227,6 +265,10 @@
             border-radius: 12px;
             padding: 20px;
             overflow-x: auto;
+        }
+
+        .table-view.hidden {
+            display: none;
         }
 
         .table-view table {
@@ -262,6 +304,7 @@
 
         .client-row {
             cursor: pointer;
+            transition: background-color 0.2s ease;
         }
 
         .client-row:hover {
@@ -271,6 +314,7 @@
         .detail-row {
             display: none;
             background: #0d1117;
+            transition: all 0.3s ease;
         }
 
         .detail-row.expanded {
@@ -282,6 +326,22 @@
             border-left: 3px solid #58a6ff;
             background: #0a0f16;
             font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .detail-row td:hover {
+            background: #0f1419;
+        }
+
+        .detail-row.editing {
+            border-left: 3px solid #f78166;
+            background: #1a0e0a;
+        }
+
+        .detail-row.editing td {
+            background: #1a0e0a;
+            border-left: 3px solid #f78166;
         }
 
         .expand-btn {
@@ -298,11 +358,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .expand-btn:hover {
-            color: #f0f6fc;
-            background: #30363d;
+            pointer-events: none;
         }
 
         .expand-btn.expanded {
@@ -318,6 +374,13 @@
         .checklist-answer {
             color: #8b949e;
             font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-answer:hover {
+            background: #21262d;
         }
 
         .checklist-answer.completed {
@@ -326,6 +389,63 @@
 
         .checklist-answer.incomplete {
             color: #ff6b6b;
+        }
+
+        .inline-edit {
+            background: #21262d;
+            border: 1px solid #58a6ff;
+            color: #f0f6fc;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            width: 100%;
+            max-width: 250px;
+            margin-top: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .inline-edit:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.3);
+            border-color: #79c0ff;
+        }
+
+        .inline-edit-select {
+            background: #21262d;
+            border: 1px solid #58a6ff;
+            color: #f0f6fc;
+            padding: 6px 30px 6px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            width: 100%;
+            max-width: 250px;
+            margin-top: 4px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2358a6ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 8px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .inline-edit-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.3);
+            border-color: #79c0ff;
+        }
+
+        .inline-edit-checkbox {
+            transform: scale(1.3);
+            accent-color: #58a6ff;
+            margin-top: 4px;
+        }
+
+        .editing-indicator {
+            display: inline-block;
+            font-size: 0.7rem;
+            color: #f78166;
+            margin-left: 8px;
+            font-style: italic;
         }
 
         .status-badge {
@@ -575,7 +695,7 @@
             padding: 25px;
             border-radius: 12px;
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             max-height: 85vh;
             overflow-y: auto;
             animation: modalSlideIn 0.4s ease;
@@ -718,7 +838,10 @@
         }
 
         .checklist-item textarea,
-        .checklist-item input[type="text"] {
+        .checklist-item input[type="text"],
+        .checklist-item input[type="date"],
+        .checklist-item input[type="number"],
+        .checklist-item input[type="url"] {
             margin-top: 10px;
             background: #21262d;
             border: 1px solid #30363d;
@@ -726,7 +849,10 @@
         }
 
         .checklist-item textarea:focus,
-        .checklist-item input[type="text"]:focus {
+        .checklist-item input[type="text"]:focus,
+        .checklist-item input[type="date"]:focus,
+        .checklist-item input[type="number"]:focus,
+        .checklist-item input[type="url"]:focus {
             border-color: #58a6ff;
             background: #161b22;
         }
@@ -745,16 +871,39 @@
             font-size: 1.1rem;
         }
 
+        .template-items-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            background: #0d1117;
+        }
+
+        .template-question-block {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .template-question-block:hover {
+            border-color: #58a6ff;
+        }
+
         .template-item {
             display: flex;
             gap: 10px;
+            align-items: flex-start;
+            flex-wrap: wrap;
             margin-bottom: 12px;
-            align-items: center;
         }
 
         .template-item input[type="text"] {
             flex: 1;
-            min-width: 0;
+            min-width: 250px;
             padding: 10px 12px;
             background: #21262d;
             border: 1px solid #30363d;
@@ -776,7 +925,7 @@
         }
 
         .template-item select {
-            width: 120px;
+            min-width: 160px;
             padding: 10px 35px 10px 12px;
             background: #21262d;
             border: 1px solid #30363d;
@@ -796,6 +945,45 @@
             border-color: #58a6ff;
             box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
             background-color: #161b22;
+        }
+
+        .template-item-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .template-item .options-input {
+            width: 100%;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #f0f6fc;
+            transition: all 0.3s ease;
+        }
+
+        .template-item .options-input:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
+        }
+
+        .template-item .required-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8b949e;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .template-item .required-checkbox input[type="checkbox"] {
+            transform: scale(1.1);
+            accent-color: #f85149;
         }
 
         .templates-list {
@@ -856,6 +1044,7 @@
             box-shadow: 0 10px 35px rgba(35, 134, 54, 0.3);
             font-weight: 600;
             font-size: 14px;
+            max-width: 350px;
         }
 
         .toast.show {
@@ -891,6 +1080,26 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #30363d;
+            color: #8b949e;
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: #58a6ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: #79c0ff;
         }
 
         @media (max-width: 768px) {
@@ -931,7 +1140,14 @@
             }
 
             .template-item select {
+                min-width: auto;
                 width: 100%;
+            }
+
+            .template-item-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
             }
 
             .card .card-meta {
@@ -951,6 +1167,16 @@
             .table-view th,
             .table-view td {
                 padding: 8px 12px;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .filter-dropdown {
+                min-width: 250px;
             }
         }
     </style>
@@ -997,9 +1223,17 @@
         <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
     </div>
 
+    <div class="filters">
+        <span class="filter-label">📂 Filtrar por Template:</span>
+        <select class="filter-dropdown" id="templateFilter" onchange="filterByTemplate(this.value)">
+            <option value="all">Todos os Templates</option>
+            <!-- Opções de template serão inseridas aqui -->
+        </select>
+    </div>
+
     <div class="view-toggle">
-        <button class="btn btn-secondary" id="viewToggleBtn" onclick="toggleView()">
-            <span>📊</span> Visão Planilha
+        <button class="btn btn-secondary" id="tableToggleBtn" onclick="toggleTableView()">
+            <span>📊</span> Mostrar Planilha
         </button>
     </div>
 
@@ -1019,7 +1253,7 @@
         </div>
     </div>
 
-    <div class="table-view" id="tableView">
+    <div class="table-view hidden" id="tableView">
         <table id="clientsTable">
             <thead>
                 <tr>
@@ -1084,15 +1318,29 @@
                 </div>
                 <div class="form-group">
                     <label>Perguntas do Checklist:</label>
-                    <div id="templateItems">
-                        <div class="template-item">
-                            <input type="text" placeholder="Digite uma pergunta..." required>
-                            <select>
-                                <option value="checkbox">Sim/Não</option>
-                                <option value="text">Texto</option>
-                                <option value="textarea">Texto Longo</option>
-                            </select>
-                            <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                    <div class="template-items-container">
+                        <div id="templateItems">
+                            <div class="template-question-block">
+                                <div class="template-item">
+                                    <input type="text" placeholder="Digite uma pergunta..." required>
+                                    <select onchange="handleTypeChange(this)">
+                                        <option value="checkbox">Sim/Não</option>
+                                        <option value="text">Texto</option>
+                                        <option value="textarea">Texto Longo</option>
+                                        <option value="date">Data</option>
+                                        <option value="number">Número</option>
+                                        <option value="url">Link</option>
+                                        <option value="select">Lista de Opções</option>
+                                    </select>
+                                </div>
+                                <div class="template-item-controls">
+                                    <div class="required-checkbox">
+                                        <input type="checkbox" id="req-new-0">
+                                        <label for="req-new-0">Obrigatório</label>
+                                    </div>
+                                    <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <button type="button" class="btn btn-secondary btn-small" onclick="addTemplateItem()">
@@ -1133,8 +1381,10 @@
             </div>
             <div class="form-group">
                 <label>Perguntas do Checklist:</label>
-                <div id="editTemplateItems">
-                    <!-- Items do template sendo editado -->
+                <div class="template-items-container">
+                    <div id="editTemplateItems">
+                        <!-- Items do template sendo editado -->
+                    </div>
                 </div>
                 <button type="button" class="btn btn-secondary btn-small" onclick="addEditTemplateItem()">
                     ➕ Adicionar Pergunta
@@ -1176,17 +1426,21 @@
 
     <div id="toast" class="toast"></div>
 
+    <footer class="footer">
+        Desenvolvido por <a href="https://github.com/vininleao" target="_blank">Vinícius Leão</a>
+    </footer>
+
     <script>
-        // Templates pré-definidos (Amazon agora pode ser editado)
+        // Templates pré-definidos
         const defaultTemplates = {
             'onboarding-amazon': {
                 name: 'Onboarding Amazon',
                 items: [
-                    { id: 'conta-amazon', text: 'Abriu conta Amazon?', type: 'checkbox' },
-                    { id: 'pagamento', text: 'Método de pagamento confirmado?', type: 'checkbox' },
-                    { id: 'produtos', text: 'Subiu produtos?', type: 'checkbox' },
-                    { id: 'quantidade-produtos', text: 'Quantos produtos?', type: 'text' },
-                    { id: 'observacoes', text: 'Observações (dia em que editou)', type: 'textarea' }
+                    { id: 'conta-amazon', text: 'Abriu conta Amazon?', type: 'checkbox', isRequired: true },
+                    { id: 'pagamento', text: 'Método de pagamento confirmado?', type: 'checkbox', isRequired: true },
+                    { id: 'produtos', text: 'Subiu produtos?', type: 'checkbox', isRequired: false },
+                    { id: 'quantidade-produtos', text: 'Quantos produtos?', type: 'number', isRequired: false },
+                    { id: 'observacoes', text: 'Observações (dia em que editou)', type: 'textarea', isRequired: false }
                 ],
                 isDefault: true
             }
@@ -1198,7 +1452,10 @@
         let currentClientId = null;
         let selectedTemplateId = null;
         let editingTemplateId = null;
-        let currentView = 'kanban'; // 'kanban' ou 'table'
+        let currentFilter = 'all';
+        let tableVisible = false;
+        let expandedClientIds = new Set(); // Gerenciar estado de expansão
+        let currentEditingRow = null; // Controlar qual linha está sendo editada
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -1206,6 +1463,7 @@
             renderClients();
             renderTableView();
             updateStats();
+            renderTemplateFilters();
             setupDragAndDrop();
             setupSearch();
             setupKeyboardShortcuts();
@@ -1219,9 +1477,14 @@
                     e.preventDefault();
                     openNewClientModal();
                 }
-                // Escape para fechar modais
+                // Escape para fechar modais e cancelar edição
                 if (e.key === 'Escape') {
                     e.preventDefault();
+                    // Cancelar edição inline se houver
+                    if (currentEditingRow) {
+                        cancelInlineEdit();
+                    }
+                    // Fechar modais
                     document.querySelectorAll('.modal').forEach(modal => {
                         if (modal.style.display === 'block') {
                             modal.style.display = 'none';
@@ -1243,29 +1506,112 @@
             });
         }
 
-        // Alternar entre visão Kanban e Planilha
-        function toggleView() {
-            const kanbanView = document.getElementById('kanbanView');
+        // Alternar visibilidade da tabela
+        function toggleTableView() {
             const tableView = document.getElementById('tableView');
-            const toggleBtn = document.getElementById('viewToggleBtn');
+            const toggleBtn = document.getElementById('tableToggleBtn');
 
-            if (currentView === 'kanban') {
-                currentView = 'table';
-                kanbanView.style.display = 'none';
-                tableView.style.display = 'block';
-                toggleBtn.innerHTML = '<span>📋</span> Visão Kanban';
+            tableVisible = !tableVisible;
+            
+            if (tableVisible) {
+                tableView.classList.remove('hidden');
+                toggleBtn.innerHTML = '<span>📋</span> Ocultar Planilha';
             } else {
-                currentView = 'kanban';
-                kanbanView.style.display = 'grid';
-                tableView.style.display = 'none';
-                toggleBtn.innerHTML = '<span>📊</span> Visão Planilha';
+                tableView.classList.add('hidden');
+                toggleBtn.innerHTML = '<span>📊</span> Mostrar Planilha';
+            }
+        }
+
+        // Renderizar filtros de template
+        function renderTemplateFilters() {
+            const dropdown = document.getElementById('templateFilter');
+            
+            // Limpar opções existentes (exceto a primeira)
+            while (dropdown.children.length > 1) {
+                dropdown.removeChild(dropdown.lastChild);
+            }
+
+            // Adicionar opção para cada template
+            Object.keys(templates).forEach(templateId => {
+                const template = templates[templateId];
+                const option = document.createElement('option');
+                option.value = templateId;
+                option.textContent = template.name;
+                if (templateId === currentFilter) {
+                    option.selected = true;
+                }
+                dropdown.appendChild(option);
+            });
+
+            // Atualizar dropdown para o filtro atual
+            dropdown.value = currentFilter;
+        }
+
+        // Filtrar por template
+        function filterByTemplate(templateId) {
+            currentFilter = templateId;
+            renderClients();
+            renderTableView();
+            updateStats();
+        }
+
+        // Validar campos obrigatórios
+        function validateRequiredFields(client) {
+            const template = templates[client.template];
+            if (!template) return { valid: true, missing: [] };
+
+            const missing = [];
+            
+            template.items.forEach(item => {
+                if (item.isRequired) {
+                    const response = client.responses[item.id];
+                    
+                    if (item.type === 'checkbox') {
+                        if (!response) missing.push(item.text);
+                    } else {
+                        if (!response || response.toString().trim() === '') {
+                            missing.push(item.text);
+                        }
+                    }
+                }
+            });
+
+            return {
+                valid: missing.length === 0,
+                missing: missing
+            };
+        }
+
+        // Função para lidar com mudança de tipo no template
+        function handleTypeChange(selectElement) {
+            const questionBlock = selectElement.closest('.template-question-block');
+            const existingOptionsInput = questionBlock.querySelector('.options-input');
+            
+            if (existingOptionsInput) {
+                existingOptionsInput.remove();
+            }
+
+            if (selectElement.value === 'select') {
+                const optionsInput = document.createElement('input');
+                optionsInput.type = 'text';
+                optionsInput.className = 'options-input';
+                optionsInput.placeholder = 'Digite as opções separadas por vírgula (ex: Opção A, Opção B, Opção C)';
+                
+                const templateItem = selectElement.closest('.template-item');
+                questionBlock.insertBefore(optionsInput, questionBlock.querySelector('.template-item-controls'));
             }
         }
 
         // Função para expandir/recolher detalhes do cliente na tabela
-        function toggleClientDetails(clientId, button) {
+        function toggleClientDetails(clientId, event) {
+            // Evitar propagação se clicou diretamente no botão
+            if (event && event.target.classList.contains('expand-btn')) {
+                return;
+            }
+            
             const detailRows = document.querySelectorAll(`[data-parent="${clientId}"]`);
-            const isExpanded = button.classList.contains('expanded');
+            const expandBtn = document.querySelector(`[data-client-id="${clientId}"] .expand-btn`);
+            const isExpanded = expandBtn.classList.contains('expanded');
             
             detailRows.forEach(row => {
                 if (isExpanded) {
@@ -1276,12 +1622,254 @@
             });
             
             if (isExpanded) {
-                button.classList.remove('expanded');
-                button.textContent = '+';
+                expandBtn.classList.remove('expanded');
+                expandBtn.textContent = '+';
+                expandedClientIds.delete(clientId);
             } else {
-                button.classList.add('expanded');
-                button.textContent = '−';
+                expandBtn.classList.add('expanded');
+                expandBtn.textContent = '−';
+                expandedClientIds.add(clientId);
             }
+        }
+
+        // Nova função de edição inline não-destrutiva
+        function enableInlineEdit(element, clientId, itemId, itemType) {
+            // Cancelar edição anterior se houver
+            if (currentEditingRow && currentEditingRow !== element) {
+                cancelInlineEdit();
+            }
+
+            // Se já está editando esta linha, não fazer nada
+            if (currentEditingRow === element) {
+                return;
+            }
+
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            currentEditingRow = element;
+            const detailRow = element.closest('.detail-row');
+            detailRow.classList.add('editing');
+
+            const currentValue = client.responses[itemId] || '';
+            const questionDiv = element.querySelector('.checklist-question');
+            const answerDiv = element.querySelector('.checklist-answer');
+            
+            // Esconder apenas a resposta, mantendo a pergunta visível
+            answerDiv.style.display = 'none';
+            
+            // Adicionar indicador de edição à pergunta
+            if (!questionDiv.querySelector('.editing-indicator')) {
+                const indicator = document.createElement('span');
+                indicator.className = 'editing-indicator';
+                indicator.textContent = '(editando...)';
+                questionDiv.appendChild(indicator);
+            }
+            
+            let input;
+            
+            if (itemType === 'checkbox') {
+                input = document.createElement('input');
+                input.type = 'checkbox';
+                input.checked = currentValue;
+                input.className = 'inline-edit-checkbox';
+            } else if (itemType === 'select') {
+                const template = templates[client.template];
+                const item = template.items.find(i => i.id === itemId);
+                
+                input = document.createElement('select');
+                input.className = 'inline-edit-select';
+                
+                const emptyOption = document.createElement('option');
+                emptyOption.value = '';
+                emptyOption.textContent = 'Selecione...';
+                input.appendChild(emptyOption);
+                
+                if (item.options) {
+                    item.options.forEach(option => {
+                        const opt = document.createElement('option');
+                        opt.value = option;
+                        opt.textContent = option;
+                        if (option === currentValue) opt.selected = true;
+                        input.appendChild(opt);
+                    });
+                }
+            } else {
+                input = document.createElement('input');
+                input.type = itemType === 'textarea' ? 'text' : itemType;
+                input.value = currentValue;
+                input.className = 'inline-edit';
+                input.placeholder = 'Digite aqui...';
+            }
+
+            const saveEdit = () => {
+                let newValue;
+                if (itemType === 'checkbox') {
+                    newValue = input.checked;
+                } else {
+                    newValue = input.value;
+                }
+                
+                client.responses[itemId] = newValue;
+                
+                // Verificar se é o campo de observações e atualizar data
+                if (itemId === 'observacoes' && newValue && newValue.toString().trim() !== '') {
+                    client.observationLastEdited = new Date().toISOString();
+                }
+                
+                // Atualizar status automaticamente baseado no progresso
+                updateStatusByProgress(client);
+                
+                saveData();
+                renderClients();
+                
+                // Renderizar tabela mantendo o estado de expansão
+                renderTableViewPreservingState();
+                updateStats();
+                
+                // Limpar estado de edição
+                currentEditingRow = null;
+            };
+
+            const cancelEdit = () => {
+                cancelInlineEdit();
+            };
+
+            input.onblur = saveEdit;
+            input.onkeydown = (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveEdit();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    cancelEdit();
+                }
+            };
+
+            // Adicionar o input após a pergunta
+            element.appendChild(input);
+            input.focus();
+        }
+
+        // Cancelar edição inline
+        function cancelInlineEdit() {
+            if (!currentEditingRow) return;
+
+            const detailRow = currentEditingRow.closest('.detail-row');
+            detailRow.classList.remove('editing');
+
+            const questionDiv = currentEditingRow.querySelector('.checklist-question');
+            const answerDiv = currentEditingRow.querySelector('.checklist-answer');
+            const editingIndicator = questionDiv.querySelector('.editing-indicator');
+            const input = currentEditingRow.querySelector('.inline-edit, .inline-edit-select, .inline-edit-checkbox');
+
+            // Remover indicador de edição
+            if (editingIndicator) {
+                editingIndicator.remove();
+            }
+
+            // Remover input
+            if (input) {
+                input.remove();
+            }
+
+            // Mostrar resposta novamente
+            answerDiv.style.display = 'block';
+
+            currentEditingRow = null;
+        }
+
+        // Nova função para renderizar a tabela preservando o estado de expansão
+        function renderTableViewPreservingState() {
+            const tbody = document.getElementById('clientsTableBody');
+            tbody.innerHTML = '';
+
+            const filteredClients = currentFilter === 'all' 
+                ? clients 
+                : clients.filter(c => c.template === currentFilter);
+
+            filteredClients.forEach(client => {
+                const template = templates[client.template];
+                if (!template) return;
+
+                const progress = calculateProgress(client);
+                
+                // Linha principal do cliente
+                const clientRow = document.createElement('tr');
+                clientRow.className = 'client-row';
+                clientRow.dataset.clientId = client.id;
+                clientRow.setAttribute('data-client-id', client.id);
+                clientRow.onclick = (e) => toggleClientDetails(client.id, e);
+
+                const statusLabels = {
+                    'todo': 'A Fazer',
+                    'progress': 'Em Andamento',
+                    'done': 'Concluído'
+                };
+
+                const isExpanded = expandedClientIds.has(client.id);
+                const expandIcon = isExpanded ? '−' : '+';
+
+                clientRow.innerHTML = `
+                    <td>
+                        <button class="expand-btn ${isExpanded ? 'expanded' : ''}">${expandIcon}</button>
+                    </td>
+                                        <td>${client.name}</td>
+                    <td>${template.name}</td>
+                    <td><span class="status-badge status-${client.status}">${statusLabels[client.status]}</span></td>
+                    <td>
+                        <div class="progress-cell">
+                            <div class="progress-bar-mini">
+                                <div class="progress-fill-mini" style="width: ${progress}%"></div>
+                            </div>
+                            <span>${progress}%</span>
+                        </div>
+                    </td>
+                    <td>${formatDate(client.createdAt)}</td>
+                    <td>${formatDate(client.completedAt)}</td>
+                `;
+
+                tbody.appendChild(clientRow);
+
+                // Linhas de detalhes do checklist
+                template.items.forEach(item => {
+                    const detailRow = document.createElement('tr');
+                    detailRow.className = `detail-row ${isExpanded ? 'expanded' : ''}`;
+                    detailRow.dataset.parent = client.id;
+
+                    let answerContent = '';
+                    let answerClass = '';
+                    const response = client.responses[item.id];
+
+                    if (item.type === 'checkbox') {
+                        if (response === true) {
+                            answerContent = '✅ Sim';
+                            answerClass = 'completed';
+                        } else {
+                            answerContent = '❌ Não';
+                            answerClass = 'incomplete';
+                        }
+                    } else {
+                        answerContent = response || 'Não preenchido';
+                        answerClass = response ? 'completed' : 'incomplete';
+                    }
+
+                    detailRow.innerHTML = `
+                        <td colspan="7" onclick="enableInlineEdit(this, ${client.id}, '${item.id}', '${item.type}')">
+                            <div class="checklist-question">${item.text}${item.isRequired ? ' *' : ''}</div>
+                            <div class="checklist-answer ${answerClass}">${answerContent}</div>
+                        </td>
+                    `;
+
+                    tbody.appendChild(detailRow);
+                });
+            });
+        }
+
+        // Renderizar visão de tabela (função original mantida para compatibilidade)
+        function renderTableView() {
+            // Limpar estado de expansão ao renderizar completamente nova
+            renderTableViewPreservingState();
         }
 
         // Carregar dados do localStorage
@@ -1300,6 +1888,15 @@
             
             if (storedTemplates) {
                 templates = JSON.parse(storedTemplates);
+                // Migrar templates antigos para incluir isRequired
+                Object.keys(templates).forEach(templateId => {
+                    const template = templates[templateId];
+                    template.items.forEach(item => {
+                        if (item.isRequired === undefined) {
+                            item.isRequired = false;
+                        }
+                    });
+                });
             } else {
                 templates = { ...defaultTemplates };
                 saveTemplates();
@@ -1329,32 +1926,31 @@
 
         // Filtrar clientes
         function filterClients(query) {
-            if (currentView === 'kanban') {
-                const cards = document.querySelectorAll('.card');
-                cards.forEach(card => {
-                    const clientName = card.querySelector('h3').textContent.toLowerCase();
-                    const templateName = card.querySelector('.template-name').textContent.toLowerCase();
-                    const matches = clientName.includes(query) || templateName.includes(query);
-                    card.style.display = matches ? 'block' : 'none';
+            const cards = document.querySelectorAll('.card');
+            const rows = document.querySelectorAll('#clientsTableBody tr.client-row');
+            
+            cards.forEach(card => {
+                const clientName = card.querySelector('h3').textContent.toLowerCase();
+                const templateName = card.querySelector('.template-name').textContent.toLowerCase();
+                const matches = clientName.includes(query) || templateName.includes(query);
+                card.style.display = matches ? 'block' : 'none';
+            });
+
+            rows.forEach(row => {
+                const clientName = row.cells[1].textContent.toLowerCase();
+                const templateName = row.cells[2].textContent.toLowerCase();
+                const matches = clientName.includes(query) || templateName.includes(query);
+                const clientId = row.dataset.clientId;
+                
+                // Mostrar/esconder linha principal
+                row.style.display = matches ? '' : 'none';
+                
+                // Mostrar/esconder linhas de detalhes
+                const detailRows = document.querySelectorAll(`[data-parent="${clientId}"]`);
+                detailRows.forEach(detailRow => {
+                    detailRow.style.display = matches ? '' : 'none';
                 });
-            } else {
-                const rows = document.querySelectorAll('#clientsTableBody tr.client-row');
-                rows.forEach(row => {
-                    const clientName = row.cells[1].textContent.toLowerCase();
-                    const templateName = row.cells[2].textContent.toLowerCase();
-                    const matches = clientName.includes(query) || templateName.includes(query);
-                    const clientId = row.dataset.clientId;
-                    
-                    // Mostrar/esconder linha principal
-                    row.style.display = matches ? '' : 'none';
-                    
-                    // Mostrar/esconder linhas de detalhes
-                    const detailRows = document.querySelectorAll(`[data-parent="${clientId}"]`);
-                    detailRows.forEach(detailRow => {
-                        detailRow.style.display = matches ? '' : 'none';
-                    });
-                });
-            }
+            });
         }
 
         // Limpar busca
@@ -1455,8 +2051,9 @@
             clients.push(client);
             saveData();
             renderClients();
-            renderTableView();
+            renderTableViewPreservingState();
             updateStats();
+            renderTemplateFilters();
             
             document.getElementById('newClientForm').reset();
             closeModal('newClientModal');
@@ -1471,87 +2068,13 @@
                 cards.forEach(card => card.remove());
             });
 
-            clients.forEach(client => {
+            const filteredClients = currentFilter === 'all' 
+                ? clients 
+                : clients.filter(c => c.template === currentFilter);
+
+            filteredClients.forEach(client => {
                 const card = createCardElement(client);
                 document.getElementById(client.status).appendChild(card);
-            });
-        }
-
-        // Renderizar visão de tabela
-        function renderTableView() {
-            const tbody = document.getElementById('clientsTableBody');
-            tbody.innerHTML = '';
-
-            clients.forEach(client => {
-                const template = templates[client.template];
-                if (!template) return;
-
-                const progress = calculateProgress(client);
-                
-                // Linha principal do cliente
-                const clientRow = document.createElement('tr');
-                clientRow.className = 'client-row';
-                clientRow.dataset.clientId = client.id;
-
-                const statusLabels = {
-                    'todo': 'A Fazer',
-                    'progress': 'Em Andamento',
-                    'done': 'Concluído'
-                };
-
-                clientRow.innerHTML = `
-                    <td>
-                        <button class="expand-btn" onclick="toggleClientDetails(${client.id}, this)">+</button>
-                    </td>
-                    <td>${client.name}</td>
-                    <td>${template.name}</td>
-                    <td><span class="status-badge status-${client.status}">${statusLabels[client.status]}</span></td>
-                    <td>
-                        <div class="progress-cell">
-                            <div class="progress-bar-mini">
-                                <div class="progress-fill-mini" style="width: ${progress}%"></div>
-                            </div>
-                            <span>${progress}%</span>
-                        </div>
-                    </td>
-                    <td>${formatDate(client.createdAt)}</td>
-                    <td>${formatDate(client.completedAt)}</td>
-                `;
-
-                tbody.appendChild(clientRow);
-
-                // Linhas de detalhes do checklist
-                template.items.forEach(item => {
-                    const detailRow = document.createElement('tr');
-                    detailRow.className = 'detail-row';
-                    detailRow.dataset.parent = client.id;
-
-                    let answerContent = '';
-                    let answerClass = '';
-                    const response = client.responses[item.id];
-
-                    if (item.type === 'checkbox') {
-                        if (response === true) {
-                            answerContent = '✅ Sim';
-                            answerClass = 'completed';
-                        } else {
-                            answerContent = '❌ Não';
-                            answerClass = 'incomplete';
-                        }
-                    } else {
-                        answerContent = response || 'Não preenchido';
-                        answerClass = response ? 'completed' : 'incomplete';
-                    }
-
-                    detailRow.innerHTML = `
-                        <td colspan="7">
-                            <div class="checklist-question">${item.text}</div>
-                            <div class="checklist-answer ${answerClass}">${answerContent}</div>
-                        </td>
-                    `;
-
-                    tbody.appendChild(detailRow);
-                });
             });
         }
 
@@ -1611,6 +2134,13 @@
             let newStatus = client.status;
             
             if (progress === 100) {
+                // Validar campos obrigatórios antes de mover para "done"
+                const validation = validateRequiredFields(client);
+                if (!validation.valid) {
+                    showToast(`❌ Preencha todos os campos obrigatórios para concluir: ${validation.missing.join(', ')}`, true);
+                    return false;
+                }
+                
                 newStatus = 'done';
                 // Preencher data de conclusão se não existir
                 if (!client.completedAt) {
@@ -1642,6 +2172,43 @@
             return false;
         }
 
+        // Criar input baseado no tipo
+        function createInputByType(item, value = '') {
+            let input = '';
+            
+            switch (item.type) {
+                case 'checkbox':
+                    input = `<input type="checkbox" id="${item.id}" ${value ? 'checked' : ''} onchange="updateResponse('${item.id}', this.checked)">`;
+                    break;
+                case 'textarea':
+                    input = `<textarea id="${item.id}" placeholder="Digite aqui..." onchange="updateResponse('${item.id}', this.value)">${value}</textarea>`;
+                    break;
+                case 'date':
+                    input = `<input type="date" id="${item.id}" value="${value}" onchange="updateResponse('${item.id}', this.value)">`;
+                    break;
+                case 'number':
+                    input = `<input type="number" id="${item.id}" placeholder="Digite um número..." value="${value}" onchange="updateResponse('${item.id}', this.value)">`;
+                    break;
+                case 'url':
+                    input = `<input type="url" id="${item.id}" placeholder="Digite uma URL..." value="${value}" onchange="updateResponse('${item.id}', this.value)">`;
+                    break;
+                case 'select':
+                    let options = '<option value="">Selecione...</option>';
+                    if (item.options) {
+                        item.options.forEach(option => {
+                            const selected = option === value ? 'selected' : '';
+                            options += `<option value="${option}" ${selected}>${option}</option>`;
+                        });
+                    }
+                    input = `<select id="${item.id}" onchange="updateResponse('${item.id}', this.value)">${options}</select>`;
+                    break;
+                default:
+                    input = `<input type="text" id="${item.id}" placeholder="Digite aqui..." value="${value}" onchange="updateResponse('${item.id}', this.value)">`;
+            }
+            
+            return input;
+        }
+
         // Abrir modal de checklist
         function openChecklistModal(clientId) {
             currentClientId = clientId;
@@ -1662,21 +2229,14 @@
                 const div = document.createElement('div');
                 div.className = 'checklist-item';
 
-                let input = '';
                 const value = client.responses[item.id] || '';
-
-                if (item.type === 'checkbox') {
-                    input = `<input type="checkbox" id="${item.id}" ${value ? 'checked' : ''} onchange="updateResponse('${item.id}', this.checked)">`;
-                } else if (item.type === 'textarea') {
-                    input = `<textarea id="${item.id}" placeholder="Digite aqui..." onchange="updateResponse('${item.id}', this.value)">${value}</textarea>`;
-                } else {
-                    input = `<input type="text" id="${item.id}" placeholder="Digite aqui..." value="${value}" onchange="updateResponse('${item.id}', this.value)">`;
-                }
+                const input = createInputByType(item, value);
+                const requiredLabel = item.isRequired ? ' <span style="color: #f85149;">*</span>' : '';
 
                 div.innerHTML = `
                     <label>
                         ${item.type === 'checkbox' ? input : ''}
-                        ${item.text}
+                        ${item.text}${requiredLabel}
                     </label>
                     ${item.type !== 'checkbox' ? input : ''}
                 `;
@@ -1694,16 +2254,16 @@
                 client.responses[itemId] = value;
                 
                 // Verificar se é o campo de observações e atualizar data
-                if (itemId === 'observacoes' && value && value.trim() !== '') {
+                if (itemId === 'observacoes' && value && value.toString().trim() !== '') {
                     client.observationLastEdited = new Date().toISOString();
                 }
                 
                 // Atualizar status automaticamente baseado no progresso
-                const statusChanged = updateStatusByProgress(client);
+                updateStatusByProgress(client);
                 
                 saveData();
                 renderClients();
-                renderTableView();
+                renderTableViewPreservingState();
                 updateStats();
             }
         }
@@ -1725,8 +2285,9 @@
                 clients.push(newClient);
                 saveData();
                 renderClients();
-                renderTableView();
+                renderTableViewPreservingState();
                 updateStats();
+                renderTemplateFilters();
                 closeModal('checklistModal');
                 showToast('✅ Cliente duplicado com sucesso!');
             }
@@ -1738,8 +2299,9 @@
                 clients = clients.filter(c => c.id !== currentClientId);
                 saveData();
                 renderClients();
-                renderTableView();
+                renderTableViewPreservingState();
                 updateStats();
+                renderTemplateFilters();
                 closeModal('checklistModal');
                 showToast('✅ Cliente excluído com sucesso!');
             }
@@ -1790,24 +2352,60 @@
             const container = document.getElementById('editTemplateItems');
             container.innerHTML = '';
             
-            template.items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'template-item';
+            template.items.forEach((item, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'template-question-block';
                 
-                div.innerHTML = `
-                    <input type="text" value="${item.text}" required>
-                    <select>
-                        <option value="checkbox" ${item.type === 'checkbox' ? 'selected' : ''}>Sim/Não</option>
-                        <option value="text" ${item.type === 'text' ? 'selected' : ''}>Texto</option>
-                        <option value="textarea" ${item.type === 'textarea' ? 'selected' : ''}>Texto Longo</option>
-                    </select>
-                    <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
+                const optionsInput = item.type === 'select' && item.options ? 
+                    `<input type="text" class="options-input" value="${item.options.join(', ')}" placeholder="Digite as opções separadas por vírgula">` : '';
+                
+                questionBlock.innerHTML = `
+                    <div class="template-item">
+                        <input type="text" value="${item.text}" required>
+                        <select onchange="handleEditTypeChange(this)">
+                            <option value="checkbox" ${item.type === 'checkbox' ? 'selected' : ''}>Sim/Não</option>
+                            <option value="text" ${item.type === 'text' ? 'selected' : ''}>Texto</option>
+                            <option value="textarea" ${item.type === 'textarea' ? 'selected' : ''}>Texto Longo</option>
+                            <option value="date" ${item.type === 'date' ? 'selected' : ''}>Data</option>
+                            <option value="number" ${item.type === 'number' ? 'selected' : ''}>Número</option>
+                            <option value="url" ${item.type === 'url' ? 'selected' : ''}>Link</option>
+                            <option value="select" ${item.type === 'select' ? 'selected' : ''}>Lista de Opções</option>
+                        </select>
+                    </div>
+                    ${optionsInput}
+                    <div class="template-item-controls">
+                        <div class="required-checkbox">
+                            <input type="checkbox" id="req-edit-${index}" ${item.isRequired ? 'checked' : ''}>
+                            <label for="req-edit-${index}">Obrigatório</label>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
+                    </div>
                 `;
                 
-                                container.appendChild(div);
+                container.appendChild(questionBlock);
             });
             
             document.getElementById('editTemplateModal').style.display = 'block';
+        }
+
+        // Função para lidar com mudança de tipo no edit template
+        function handleEditTypeChange(selectElement) {
+            const questionBlock = selectElement.closest('.template-question-block');
+            const existingOptionsInput = questionBlock.querySelector('.options-input');
+            
+            if (existingOptionsInput) {
+                existingOptionsInput.remove();
+            }
+
+            if (selectElement.value === 'select') {
+                const optionsInput = document.createElement('input');
+                optionsInput.type = 'text';
+                optionsInput.className = 'options-input';
+                optionsInput.placeholder = 'Digite as opções separadas por vírgula (ex: Opção A, Opção B, Opção C)';
+                
+                const templateItem = selectElement.closest('.template-item');
+                questionBlock.insertBefore(optionsInput, questionBlock.querySelector('.template-item-controls'));
+            }
         }
 
         // Atualizar template
@@ -1815,16 +2413,25 @@
             const name = document.getElementById('editTemplateName').value.trim();
             const items = [];
             
-            document.querySelectorAll('#editTemplateItems .template-item').forEach((item, index) => {
-                const text = item.querySelector('input').value.trim();
-                const type = item.querySelector('select').value;
+            document.querySelectorAll('#editTemplateItems .template-question-block').forEach((block, index) => {
+                const text = block.querySelector('input[type="text"]').value.trim();
+                const type = block.querySelector('select').value;
+                const isRequired = block.querySelector('input[type="checkbox"]').checked;
+                const optionsInput = block.querySelector('.options-input');
                 
                 if (text) {
-                    items.push({
+                    const itemData = {
                         id: `item-${Date.now()}-${index}`,
                         text: text,
-                        type: type
-                    });
+                        type: type,
+                        isRequired: isRequired
+                    };
+                    
+                    if (type === 'select' && optionsInput && optionsInput.value) {
+                        itemData.options = optionsInput.value.split(',').map(opt => opt.trim()).filter(opt => opt);
+                    }
+                    
+                    items.push(itemData);
                 }
             });
 
@@ -1843,6 +2450,7 @@
 
             saveTemplates();
             loadExistingTemplates();
+            renderTemplateFilters();
             closeModal('editTemplateModal');
             showToast('✅ Template atualizado com sucesso!');
         }
@@ -1850,48 +2458,74 @@
         // Adicionar item ao template
         function addTemplateItem() {
             const container = document.getElementById('templateItems');
-            const div = document.createElement('div');
-            div.className = 'template-item';
+            const itemCount = container.children.length;
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'template-question-block';
             
-            div.innerHTML = `
-                <input type="text" placeholder="Digite uma pergunta..." required>
-                <select>
-                    <option value="checkbox">Sim/Não</option>
-                    <option value="text">Texto</option>
-                    <option value="textarea">Texto Longo</option>
-                </select>
-                <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+            questionBlock.innerHTML = `
+                <div class="template-item">
+                    <input type="text" placeholder="Digite uma pergunta..." required>
+                    <select onchange="handleTypeChange(this)">
+                        <option value="checkbox">Sim/Não</option>
+                        <option value="text">Texto</option>
+                        <option value="textarea">Texto Longo</option>
+                        <option value="date">Data</option>
+                        <option value="number">Número</option>
+                        <option value="url">Link</option>
+                        <option value="select">Lista de Opções</option>
+                    </select>
+                </div>
+                <div class="template-item-controls">
+                    <div class="required-checkbox">
+                        <input type="checkbox" id="req-new-${itemCount}">
+                        <label for="req-new-${itemCount}">Obrigatório</label>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                </div>
             `;
             
-            container.appendChild(div);
+            container.appendChild(questionBlock);
         }
 
         // Adicionar item ao template (modo edição)
         function addEditTemplateItem() {
             const container = document.getElementById('editTemplateItems');
-            const div = document.createElement('div');
-            div.className = 'template-item';
+            const itemCount = container.children.length;
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'template-question-block';
             
-            div.innerHTML = `
-                <input type="text" placeholder="Digite uma pergunta..." required>
-                <select>
-                    <option value="checkbox">Sim/Não</option>
-                    <option value="text">Texto</option>
-                    <option value="textarea">Texto Longo</option>
-                </select>
-                <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
+            questionBlock.innerHTML = `
+                <div class="template-item">
+                    <input type="text" placeholder="Digite uma pergunta..." required>
+                    <select onchange="handleEditTypeChange(this)">
+                        <option value="checkbox">Sim/Não</option>
+                        <option value="text">Texto</option>
+                        <option value="textarea">Texto Longo</option>
+                        <option value="date">Data</option>
+                        <option value="number">Número</option>
+                        <option value="url">Link</option>
+                        <option value="select">Lista de Opções</option>
+                    </select>
+                </div>
+                <div class="template-item-controls">
+                    <div class="required-checkbox">
+                        <input type="checkbox" id="req-edit-new-${itemCount}">
+                        <label for="req-edit-new-${itemCount}">Obrigatório</label>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
+                </div>
             `;
             
-            container.appendChild(div);
+            container.appendChild(questionBlock);
         }
 
         // Remover item do template
         function removeTemplateItem(button) {
-            button.parentElement.remove();
+            button.closest('.template-question-block').remove();
         }
 
         function removeEditTemplateItem(button) {
-            button.parentElement.remove();
+            button.closest('.template-question-block').remove();
         }
 
         // Salvar template
@@ -1899,16 +2533,25 @@
             const name = document.getElementById('templateName').value.trim();
             const items = [];
             
-            document.querySelectorAll('#templateItems .template-item').forEach((item, index) => {
-                const text = item.querySelector('input').value.trim();
-                const type = item.querySelector('select').value;
+            document.querySelectorAll('#templateItems .template-question-block').forEach((block, index) => {
+                const text = block.querySelector('input[type="text"]').value.trim();
+                const type = block.querySelector('select').value;
+                const isRequired = block.querySelector('input[type="checkbox"]').checked;
+                const optionsInput = block.querySelector('.options-input');
                 
                 if (text) {
-                    items.push({
+                    const itemData = {
                         id: `item-${Date.now()}-${index}`,
                         text: text,
-                        type: type
-                    });
+                        type: type,
+                        isRequired: isRequired
+                    };
+                    
+                    if (type === 'select' && optionsInput && optionsInput.value) {
+                        itemData.options = optionsInput.value.split(',').map(opt => opt.trim()).filter(opt => opt);
+                    }
+                    
+                    items.push(itemData);
                 }
             });
 
@@ -1926,18 +2569,31 @@
 
             saveTemplates();
             loadExistingTemplates();
+            renderTemplateFilters();
             
             // Limpar formulário
             document.getElementById('templateName').value = '';
             document.getElementById('templateItems').innerHTML = `
-                <div class="template-item">
-                    <input type="text" placeholder="Digite uma pergunta..." required>
-                    <select>
-                        <option value="checkbox">Sim/Não</option>
-                        <option value="text">Texto</option>
-                        <option value="textarea">Texto Longo</option>
-                    </select>
-                    <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                <div class="template-question-block">
+                    <div class="template-item">
+                        <input type="text" placeholder="Digite uma pergunta..." required>
+                        <select onchange="handleTypeChange(this)">
+                            <option value="checkbox">Sim/Não</option>
+                            <option value="text">Texto</option>
+                            <option value="textarea">Texto Longo</option>
+                            <option value="date">Data</option>
+                            <option value="number">Número</option>
+                            <option value="url">Link</option>
+                            <option value="select">Lista de Opções</option>
+                        </select>
+                    </div>
+                    <div class="template-item-controls">
+                        <div class="required-checkbox">
+                            <input type="checkbox" id="req-new-0">
+                            <label for="req-new-0">Obrigatório</label>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                    </div>
                 </div>
             `;
             
@@ -1957,15 +2613,20 @@
                 delete templates[templateId];
                 saveTemplates();
                 loadExistingTemplates();
+                renderTemplateFilters();
                 showToast('✅ Template excluído com sucesso!');
             }
         }
 
         // Atualizar estatísticas
         function updateStats() {
-            const todoCount = clients.filter(c => c.status === 'todo').length;
-            const progressCount = clients.filter(c => c.status === 'progress').length;
-            const doneCount = clients.filter(c => c.status === 'done').length;
+            const filteredClients = currentFilter === 'all' 
+                ? clients 
+                : clients.filter(c => c.template === currentFilter);
+                
+            const todoCount = filteredClients.filter(c => c.status === 'todo').length;
+            const progressCount = filteredClients.filter(c => c.status === 'progress').length;
+            const doneCount = filteredClients.filter(c => c.status === 'done').length;
 
             document.getElementById('todoCount').textContent = todoCount;
             document.getElementById('progressCount').textContent = progressCount;
@@ -1978,7 +2639,7 @@
                 clients: clients,
                 templates: templates,
                 exportDate: new Date().toISOString(),
-                version: '2.1'
+                version: '3.1'
             };
 
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2015,11 +2676,26 @@
                                 if (!client.observationLastEdited) client.observationLastEdited = null;
                             });
                             
+                            // Migrar templates para incluir isRequired
+                            Object.keys(templates).forEach(templateId => {
+                                const template = templates[templateId];
+                                template.items.forEach(item => {
+                                    if (item.isRequired === undefined) {
+                                        item.isRequired = false;
+                                    }
+                                });
+                            });
+                            
+                            // Limpar estado de expansão
+                            expandedClientIds.clear();
+                            currentEditingRow = null;
+                            
                             saveData();
                             saveTemplates();
                             renderClients();
-                            renderTableView();
+                            renderTableViewPreservingState();
                             updateStats();
+                            renderTemplateFilters();
                             showToast('✅ Dados importados com sucesso!');
                         }
                     } else {
@@ -2075,6 +2751,15 @@
                         const client = clients.find(c => c.id === clientId);
                         
                         if (client && client.status !== columnId) {
+                            // Validar campos obrigatórios se movendo para "done"
+                            if (columnId === 'done') {
+                                const validation = validateRequiredFields(client);
+                                if (!validation.valid) {
+                                    showToast(`❌ Preencha todos os campos obrigatórios para concluir: ${validation.missing.join(', ')}`, true);
+                                    return;
+                                }
+                            }
+                            
                             const statusNames = {
                                 'todo': 'A Fazer',
                                 'progress': 'Em Andamento', 
@@ -2092,7 +2777,7 @@
                             
                             saveData();
                             renderClients();
-                            renderTableView();
+                            renderTableViewPreservingState();
                             updateStats();
                             showToast(`✅ ${client.name} movido para "${statusNames[columnId]}"`);
                         }
@@ -2110,3 +2795,4 @@
     </script>
 </body>
 </html>
+                    
