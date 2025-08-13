@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClientDeck - Gerenciador de Clientes</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            min-height: 100vh;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #58a6ff, #f78166, #a5a5f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #8b949e;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid #2ea043;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: #2ea043;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(46, 160, 67, 0.3);
+        }
+
+        .btn-secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #f0f6fc;
+        }
+
+        .btn-secondary:hover {
+            background: #30363d;
+            border-color: #8b949e;
+            box-shadow: 0 6px 20px rgba(48, 54, 61, 0.3);
+        }
+
+        .btn-danger {
+            background: #da3633;
+            border: 1px solid #f85149;
+        }
+
+        .btn-danger:hover {
+            background: #f85149;
+            box-shadow: 0 6px 20px rgba(248, 81, 73, 0.3);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #161b22, #1c2128);
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(88, 166, 255, 0.1);
+            min-width: 100px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+            background: linear-gradient(135deg, #58a6ff, #a5a5f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #8b949e;
+            font-weight: 500;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+            position: relative;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: #f0f6fc;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+            background: #161b22;
+        }
+
+        .search-box .clear-search {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .search-box .clear-search:hover {
+            color: #f0f6fc;
+            background: #30363d;
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .column {
+            background: linear-gradient(135deg, #161b22, #1c2128);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 550px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .column::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .todo::before {
+            background: linear-gradient(90deg, #f85149, #ff6b6b);
+        }
+
+        .progress::before {
+            background: linear-gradient(90deg, #d29922, #ffc107);
+        }
+
+        .done::before {
+            background: linear-gradient(90deg, #3fb950, #56d364);
+        }
+
+        .column h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: 1px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .todo h2 {
+            background: rgba(248, 81, 73, 0.1);
+            border-color: #f85149;
+            color: #ff6b6b;
+        }
+
+        .progress h2 {
+            background: rgba(210, 153, 34, 0.1);
+            border-color: #d29922;
+            color: #ffc107;
+        }
+
+        .done h2 {
+            background: rgba(63, 185, 80, 0.1);
+            border-color: #3fb950;
+            color: #56d364;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #0d1117, #161b22);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: move;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(135deg, #58a6ff, #a5a5f5);
+        }
+
+        .card:hover {
+            border-color: #58a6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.15);
+        }
+
+        .card.dragging {
+            opacity: 0.7;
+            transform: rotate(2deg) scale(0.95);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+        }
+
+        .card h3 {
+            color: #f0f6fc;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .card .template-name {
+            color: #8b949e;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            background: #21262d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .card .progress-bar {
+            background: #21262d;
+            border-radius: 8px;
+            height: 6px;
+            overflow: hidden;
+            margin-bottom: 6px;
+            border: 1px solid #30363d;
+        }
+
+        .card .progress-fill {
+            background: linear-gradient(90deg, #3fb950, #56d364);
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .card .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .card .progress-text {
+            font-size: 0.75rem;
+            color: #8b949e;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .card .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #30363d;
+            font-size: 0.7rem;
+            color: #8b949e;
+        }
+
+        .column.drag-over {
+            border-color: #58a6ff;
+            background: linear-gradient(135deg, #0c2d6b, #1c2128);
+            transform: scale(1.01);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.4s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .modal-header h2 {
+            color: #f0f6fc;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .close {
+            color: #8b949e;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 6px;
+            border-radius: 6px;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #f0f6fc;
+            background: #30363d;
+            transform: scale(1.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #30363d;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #f0f6fc;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #f0f6fc;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+            background: #161b22;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #8b949e;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b949e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .checklist-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            border-color: #58a6ff;
+        }
+
+        .checklist-item label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: #f0f6fc;
+            font-size: 0.9rem;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+            accent-color: #3fb950;
+        }
+
+        .checklist-item textarea,
+        .checklist-item input[type="text"] {
+            margin-top: 10px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #f0f6fc;
+        }
+
+        .checklist-item textarea:focus,
+        .checklist-item input[type="text"]:focus {
+            border-color: #58a6ff;
+            background: #161b22;
+        }
+
+        .template-builder {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .template-builder h3 {
+            color: #f0f6fc;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .template-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .template-item input[type="text"] {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 12px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #f0f6fc;
+            transition: all 0.3s ease;
+        }
+
+        .template-item input[type="text"]:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
+            background: #161b22;
+        }
+
+        .template-item input[type="text"]::placeholder {
+            color: #8b949e;
+        }
+
+        .template-item select {
+            width: 120px;
+            padding: 10px 35px 10px 12px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #f0f6fc;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b949e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 8px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .template-item select:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
+            background-color: #161b22;
+        }
+
+        .templates-list {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .template-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .template-card:hover {
+            border-color: #58a6ff;
+            transform: translateY(-1px);
+        }
+
+        .template-card.selected {
+            border-color: #3fb950;
+            background: linear-gradient(135deg, #0f2419, #1c2128);
+        }
+
+        .template-card h4 {
+            color: #f0f6fc;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .template-card p {
+            color: #8b949e;
+            font-size: 0.8rem;
+        }
+
+        .template-card .template-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid #2ea043;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 10px 35px rgba(35, 134, 54, 0.3);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #da3633, #f85149);
+            border-color: #f85149;
+            box-shadow: 0 10px 35px rgba(218, 54, 51, 0.3);
+        }
+
+        .keyboard-shortcut {
+            font-size: 0.75rem;
+            color: #8b949e;
+            margin-top: 8px;
+            text-align: center;
+            padding: 6px;
+            background: #21262d;
+            border-radius: 4px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #30363d;
+            border-radius: 50%;
+            border-top-color: #58a6ff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .kanban-board {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .modal-content {
+                margin: 15px auto;
+                width: 95%;
+                max-height: 90vh;
+                padding: 20px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .template-item {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+            }
+
+            .template-item select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✨ ClientDeck</h1>
+        <p>O jeito mais simples e intuitivo de gerenciar seus clientes</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-item">
+            <span class="stat-number" id="todoCount">0</span>
+            <span class="stat-label">🔴 A Fazer</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number" id="progressCount">0</span>
+            <span class="stat-label">🟡 Em Andamento</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number" id="doneCount">0</span>
+            <span class="stat-label">🟢 Concluído</span>
+        </div>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar clientes... (digite o nome ou template)">
+        <button class="clear-search" onclick="clearSearch()" style="display: none;">×</button>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="openNewClientModal()">
+            <span>👤</span> Novo Cliente
+        </button>
+        <button class="btn btn-secondary" onclick="openTemplateModal()">
+            <span>⚙️</span> Templates
+        </button>
+        <button class="btn btn-secondary" onclick="exportData()">
+            <span>📥</span> Exportar
+        </button>
+        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+            <span>📤</span> Importar
+        </button>
+        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
+    </div>
+
+    <div class="keyboard-shortcut">
+        💡 Dica: Use Alt+N para novo cliente, Escape para fechar modais
+    </div>
+
+    <div class="kanban-board">
+        <div class="column todo" id="todo">
+            <h2>🔴 A Fazer</h2>
+        </div>
+        <div class="column progress" id="progress">
+            <h2>🟡 Em Andamento</h2>
+        </div>
+        <div class="column done" id="done">
+            <h2>🟢 Concluído</h2>
+        </div>
+    </div>
+
+    <!-- Modal para novo cliente -->
+    <div id="newClientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>👤 Novo Cliente</h2>
+                <span class="close" onclick="closeModal('newClientModal')">&times;</span>
+            </div>
+            <form id="newClientForm">
+                <div class="form-group">
+                    <label for="clientName">Nome do Cliente:</label>
+                    <input type="text" id="clientName" placeholder="Digite o nome do cliente" required>
+                </div>
+                <div class="form-group">
+                    <label>Selecione um Template:</label>
+                    <div class="templates-list" id="templatesList">
+                        <!-- Templates serão carregados aqui -->
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('newClientModal')">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn">
+                        <span>✅</span> Criar Cliente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para gerenciar templates -->
+    <div id="templateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Gerenciar Templates</h2>
+                <span class="close" onclick="closeModal('templateModal')">&times;</span>
+            </div>
+            
+            <div class="template-builder">
+                <h3>➕ Criar Novo Template</h3>
+                <div class="form-group">
+                    <label for="templateName">Nome do Template:</label>
+                    <input type="text" id="templateName" placeholder="Ex: Onboarding Shopify">
+                </div>
+                <div class="form-group">
+                    <label>Perguntas do Checklist:</label>
+                    <div id="templateItems">
+                        <div class="template-item">
+                            <input type="text" placeholder="Digite uma pergunta..." required>
+                            <select>
+                                <option value="checkbox">Sim/Não</option>
+                                <option value="text">Texto</option>
+                                <option value="textarea">Texto Longo</option>
+                            </select>
+                            <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-small" onclick="addTemplateItem()">
+                        ➕ Adicionar Pergunta
+                    </button>
+                </div>
+                <button type="button" class="btn" onclick="saveTemplate()">
+                    <span>💾</span> Salvar Template
+                </button>
+            </div>
+
+            <div class="templates-list">
+                <h3>📋 Templates Existentes</h3>
+                <div id="existingTemplates">
+                    <!-- Templates existentes serão listados aqui -->
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('templateModal')">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar template -->
+    <div id="editTemplateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Editar Template</h2>
+                <span class="close" onclick="closeModal('editTemplateModal')">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="editTemplateName">Nome do Template:</label>
+                <input type="text" id="editTemplateName" placeholder="Ex: Onboarding Shopify">
+            </div>
+            <div class="form-group">
+                <label>Perguntas do Checklist:</label>
+                <div id="editTemplateItems">
+                    <!-- Items do template sendo editado -->
+                </div>
+                <button type="button" class="btn btn-secondary btn-small" onclick="addEditTemplateItem()">
+                    ➕ Adicionar Pergunta
+                </button>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editTemplateModal')">
+                    Cancelar
+                </button>
+                <button type="button" class="btn" onclick="updateTemplate()">
+                    <span>💾</span> Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para checklist do cliente -->
+    <div id="checklistModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="checklistTitle">Checklist do Cliente</h2>
+                <span class="close" onclick="closeModal('checklistModal')">&times;</span>
+            </div>
+            <div id="checklistContent"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="duplicateClient()">
+                    <span>📋</span> Duplicar
+                </button>
+                <button class="btn btn-danger" onclick="deleteClient()">
+                    <span>🗑️</span> Excluir
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('checklistModal')">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Templates pré-definidos (Amazon agora pode ser editado)
+        const defaultTemplates = {
+            'onboarding-amazon': {
+                name: 'Onboarding Amazon',
+                items: [
+                    { id: 'conta-amazon', text: 'Abriu conta Amazon?', type: 'checkbox' },
+                    { id: 'pagamento', text: 'Método de pagamento confirmado?', type: 'checkbox' },
+                    { id: 'produtos', text: 'Subiu produtos?', type: 'checkbox' },
+                    { id: 'quantidade-produtos', text: 'Quantos produtos?', type: 'text' },
+                    { id: 'observacoes', text: 'Observações (dia em que editou)', type: 'textarea' }
+                ],
+                isDefault: true
+            }
+        };
+
+        // Dados globais
+        let clients = [];
+        let templates = {};
+        let currentClientId = null;
+        let selectedTemplateId = null;
+        let editingTemplateId = null;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            renderClients();
+            updateStats();
+            setupDragAndDrop();
+            setupSearch();
+            setupKeyboardShortcuts();
+        });
+
+        // Configurar atalhos de teclado
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                // Alt+N para novo cliente
+                if (e.altKey && e.key === 'n') {
+                    e.preventDefault();
+                    openNewClientModal();
+                }
+                // Escape para fechar modais
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        if (modal.style.display === 'block') {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+                // Enter para confirmar em modais
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    const activeModal = Array.from(document.querySelectorAll('.modal')).find(modal => 
+                        modal.style.display === 'block'
+                    );
+                    if (activeModal) {
+                        const submitBtn = activeModal.querySelector('button[type="submit"], .btn:not(.btn-secondary):not(.btn-danger)');
+                        if (submitBtn) {
+                            submitBtn.click();
+                        }
+                    }
+                }
+            });
+        }
+
+        // Carregar dados do localStorage
+        function loadData() {
+            const storedClients = localStorage.getItem('clientdeck-clients');
+            const storedTemplates = localStorage.getItem('clientdeck-templates');
+            
+            if (storedClients) {
+                clients = JSON.parse(storedClients);
+            }
+            
+            if (storedTemplates) {
+                templates = JSON.parse(storedTemplates);
+            } else {
+                templates = { ...defaultTemplates };
+                saveTemplates();
+            }
+        }
+
+        // Salvar dados
+        function saveData() {
+            localStorage.setItem('clientdeck-clients', JSON.stringify(clients));
+        }
+
+        function saveTemplates() {
+            localStorage.setItem('clientdeck-templates', JSON.stringify(templates));
+        }
+
+        // Configurar busca
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const clearButton = document.querySelector('.clear-search');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                clearButton.style.display = query ? 'block' : 'none';
+                filterClients(query);
+            });
+        }
+
+        // Filtrar clientes
+        function filterClients(query) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const clientName = card.querySelector('h3').textContent.toLowerCase();
+                const templateName = card.querySelector('.template-name').textContent.toLowerCase();
+                const matches = clientName.includes(query) || templateName.includes(query);
+                card.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        // Limpar busca
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.querySelector('.clear-search').style.display = 'none';
+            filterClients('');
+        }
+
+        // Mostrar toast
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${isError ? 'error' : ''} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Abrir modal de novo cliente
+        function openNewClientModal() {
+            document.getElementById('newClientModal').style.display = 'block';
+            loadTemplatesForSelection();
+            setTimeout(() => {
+                document.getElementById('clientName').focus();
+            }, 100);
+        }
+
+        // Carregar templates para seleção
+        function loadTemplatesForSelection() {
+            const container = document.getElementById('templatesList');
+            container.innerHTML = '';
+
+            Object.keys(templates).forEach(key => {
+                const template = templates[key];
+                const div = document.createElement('div');
+                div.className = 'template-card';
+                div.onclick = () => selectTemplate(key, div);
+                
+                div.innerHTML = `
+                    <h4>${template.name}</h4>
+                    <p>${template.items.length} pergunta${template.items.length !== 1 ? 's' : ''}</p>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        // Selecionar template
+        function selectTemplate(templateId, element) {
+            document.querySelectorAll('#templatesList .template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            selectedTemplateId = templateId;
+        }
+
+        // Fechar modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            selectedTemplateId = null;
+            editingTemplateId = null;
+        }
+
+        // Criar novo cliente
+        document.getElementById('newClientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('clientName').value.trim();
+            
+            if (!name || !selectedTemplateId) {
+                showToast('❌ Preencha o nome e selecione um template', true);
+                return;
+            }
+
+            const client = {
+                id: Date.now(),
+                name: name,
+                template: selectedTemplateId,
+                status: 'todo',
+                responses: {},
+                createdAt: new Date().toISOString()
+            };
+
+            clients.push(client);
+            saveData();
+            renderClients();
+            updateStats();
+            
+            document.getElementById('newClientForm').reset();
+            closeModal('newClientModal');
+            showToast('✅ Cliente criado com sucesso!');
+        });
+
+        // Renderizar clientes
+        function renderClients() {
+            ['todo', 'progress', 'done'].forEach(status => {
+                const column = document.getElementById(status);
+                const cards = column.querySelectorAll('.card');
+                cards.forEach(card => card.remove());
+            });
+
+            clients.forEach(client => {
+                const card = createCardElement(client);
+                document.getElementById(client.status).appendChild(card);
+            });
+        }
+
+        // Criar elemento de card
+        function createCardElement(client) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.draggable = true;
+            card.dataset.clientId = client.id;
+
+            const template = templates[client.template];
+            if (!template) {
+                console.warn(`Template ${client.template} não encontrado`);
+                return card;
+            }
+
+            const progress = calculateProgress(client);
+            const createdDate = new Date(client.createdAt).toLocaleDateString('pt-BR');
+
+            card.innerHTML = `
+                <h3>${client.name}</h3>
+                <div class="template-name">${template.name}</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                </div>
+                <div class="progress-text">${progress}% completo</div>
+                <div class="card-meta">
+                    <span>📅 ${createdDate}</span>
+                    <span>📝 ${template.items.length} itens</span>
+                </div>
+            `;
+
+            card.addEventListener('click', () => openChecklistModal(client.id));
+            
+            return card;
+        }
+
+        // Calcular progresso
+        function calculateProgress(client) {
+            const template = templates[client.template];
+            if (!template) return 0;
+            
+            const checkboxItems = template.items.filter(item => item.type === 'checkbox');
+            const completedItems = checkboxItems.filter(item => client.responses[item.id] === true);
+            
+            if (checkboxItems.length === 0) return 0;
+            return Math.round((completedItems.length / checkboxItems.length) * 100);
+        }
+
+        // Abrir modal de checklist
+        function openChecklistModal(clientId) {
+            currentClientId = clientId;
+            const client = clients.find(c => c.id === clientId);
+            const template = templates[client.template];
+
+            if (!template) {
+                showToast('❌ Template não encontrado', true);
+                return;
+            }
+
+            document.getElementById('checklistTitle').textContent = `${client.name} - ${template.name}`;
+            
+            const content = document.getElementById('checklistContent');
+            content.innerHTML = '';
+
+            template.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'checklist-item';
+
+                let input = '';
+                const value = client.responses[item.id] || '';
+
+                if (item.type === 'checkbox') {
+                    input = `<input type="checkbox" id="${item.id}" ${value ? 'checked' : ''} onchange="updateResponse('${item.id}', this.checked)">`;
+                } else if (item.type === 'textarea') {
+                    input = `<textarea id="${item.id}" placeholder="Digite aqui..." onchange="updateResponse('${item.id}', this.value)">${value}</textarea>`;
+                } else {
+                    input = `<input type="text" id="${item.id}" placeholder="Digite aqui..." value="${value}" onchange="updateResponse('${item.id}', this.value)">`;
+                }
+
+                div.innerHTML = `
+                    <label>
+                        ${item.type === 'checkbox' ? input : ''}
+                        ${item.text}
+                    </label>
+                    ${item.type !== 'checkbox' ? input : ''}
+                `;
+
+                content.appendChild(div);
+            });
+
+            document.getElementById('checklistModal').style.display = 'block';
+        }
+
+        // Atualizar resposta
+        function updateResponse(itemId, value) {
+            const client = clients.find(c => c.id === currentClientId);
+            if (client) {
+                client.responses[itemId] = value;
+                saveData();
+                renderClients();
+                updateStats();
+            }
+        }
+
+        // Duplicar cliente
+        function duplicateClient() {
+            const client = clients.find(c => c.id === currentClientId);
+            if (client) {
+                const newClient = {
+                    ...client,
+                    id: Date.now(),
+                    name: client.name + ' (Cópia)',
+                    responses: {},
+                    createdAt: new Date().toISOString()
+                };
+                
+                clients.push(newClient);
+                saveData();
+                renderClients();
+                updateStats();
+                closeModal('checklistModal');
+                showToast('✅ Cliente duplicado com sucesso!');
+            }
+        }
+
+        // Excluir cliente
+        function deleteClient() {
+            if (confirm('❌ Tem certeza que deseja excluir este cliente?')) {
+                clients = clients.filter(c => c.id !== currentClientId);
+                saveData();
+                renderClients();
+                updateStats();
+                closeModal('checklistModal');
+                showToast('✅ Cliente excluído com sucesso!');
+            }
+        }
+
+        // Abrir modal de templates
+        function openTemplateModal() {
+            document.getElementById('templateModal').style.display = 'block';
+            loadExistingTemplates();
+        }
+
+        // Carregar templates existentes
+        function loadExistingTemplates() {
+            const container = document.getElementById('existingTemplates');
+            container.innerHTML = '';
+
+            Object.keys(templates).forEach(key => {
+                const template = templates[key];
+                const div = document.createElement('div');
+                div.className = 'template-card';
+                
+                div.innerHTML = `
+                    <h4>${template.name}</h4>
+                    <p>${template.items.length} pergunta${template.items.length !== 1 ? 's' : ''}</p>
+                    <div class="template-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editTemplate('${key}')">
+                            ✏️ Editar
+                        </button>
+                        ${!template.isDefault ? `
+                            <button class="btn btn-danger btn-small" onclick="deleteTemplate('${key}')">
+                                🗑️ Excluir
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        // Editar template
+        function editTemplate(templateId) {
+            editingTemplateId = templateId;
+            const template = templates[templateId];
+            
+            document.getElementById('editTemplateName').value = template.name;
+            
+            const container = document.getElementById('editTemplateItems');
+            container.innerHTML = '';
+            
+            template.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'template-item';
+                
+                div.innerHTML = `
+                    <input type="text" value="${item.text}" required>
+                    <select>
+                        <option value="checkbox" ${item.type === 'checkbox' ? 'selected' : ''}>Sim/Não</option>
+                        <option value="text" ${item.type === 'text' ? 'selected' : ''}>Texto</option>
+                        <option value="textarea" ${item.type === 'textarea' ? 'selected' : ''}>Texto Longo</option>
+                    </select>
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
+                `;
+                
+                container.appendChild(div);
+            });
+            
+            document.getElementById('editTemplateModal').style.display = 'block';
+        }
+
+        // Atualizar template
+        function updateTemplate() {
+            const name = document.getElementById('editTemplateName').value.trim();
+            const items = [];
+            
+            document.querySelectorAll('#editTemplateItems .template-item').forEach((item, index) => {
+                const text = item.querySelector('input').value.trim();
+                const type = item.querySelector('select').value;
+                
+                if (text) {
+                    items.push({
+                        id: `item-${Date.now()}-${index}`,
+                        text: text,
+                        type: type
+                    });
+                }
+            });
+
+            if (!name || items.length === 0) {
+                showToast('❌ Preencha o nome e adicione pelo menos uma pergunta', true);
+                return;
+            }
+
+            // Preservar isDefault se existir
+            const currentTemplate = templates[editingTemplateId];
+            templates[editingTemplateId] = {
+                name: name,
+                items: items,
+                isDefault: currentTemplate?.isDefault || false
+            };
+
+            saveTemplates();
+            loadExistingTemplates();
+            closeModal('editTemplateModal');
+            showToast('✅ Template atualizado com sucesso!');
+        }
+
+        // Adicionar item ao template
+        function addTemplateItem() {
+            const container = document.getElementById('templateItems');
+            const div = document.createElement('div');
+            div.className = 'template-item';
+            
+            div.innerHTML = `
+                <input type="text" placeholder="Digite uma pergunta..." required>
+                <select>
+                    <option value="checkbox">Sim/Não</option>
+                    <option value="text">Texto</option>
+                    <option value="textarea">Texto Longo</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+            `;
+            
+            container.appendChild(div);
+        }
+
+        // Adicionar item ao template (modo edição)
+        function addEditTemplateItem() {
+            const container = document.getElementById('editTemplateItems');
+            const div = document.createElement('div');
+            div.className = 'template-item';
+            
+            div.innerHTML = `
+                <input type="text" placeholder="Digite uma pergunta..." required>
+                <select>
+                    <option value="checkbox">Sim/Não</option>
+                    <option value="text">Texto</option>
+                    <option value="textarea">Texto Longo</option>
+                </select>
+                <button type="button" class="btn btn-danger btn-small" onclick="removeEditTemplateItem(this)">×</button>
+            `;
+            
+            container.appendChild(div);
+        }
+
+        // Remover item do template
+        function removeTemplateItem(button) {
+            button.parentElement.remove();
+        }
+
+        function removeEditTemplateItem(button) {
+            button.parentElement.remove();
+        }
+
+        // Salvar template
+        function saveTemplate() {
+            const name = document.getElementById('templateName').value.trim();
+            const items = [];
+            
+            document.querySelectorAll('#templateItems .template-item').forEach((item, index) => {
+                const text = item.querySelector('input').value.trim();
+                const type = item.querySelector('select').value;
+                
+                if (text) {
+                    items.push({
+                        id: `item-${Date.now()}-${index}`,
+                        text: text,
+                        type: type
+                    });
+                }
+            });
+
+            if (!name || items.length === 0) {
+                showToast('❌ Preencha o nome e adicione pelo menos uma pergunta', true);
+                return;
+            }
+
+            const templateId = `custom-${Date.now()}`;
+            templates[templateId] = {
+                name: name,
+                items: items,
+                isDefault: false
+            };
+
+            saveTemplates();
+            loadExistingTemplates();
+            
+            // Limpar formulário
+            document.getElementById('templateName').value = '';
+            document.getElementById('templateItems').innerHTML = `
+                <div class="template-item">
+                    <input type="text" placeholder="Digite uma pergunta..." required>
+                    <select>
+                        <option value="checkbox">Sim/Não</option>
+                        <option value="text">Texto</option>
+                        <option value="textarea">Texto Longo</option>
+                    </select>
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeTemplateItem(this)">×</button>
+                </div>
+            `;
+            
+            showToast('✅ Template criado com sucesso!');
+        }
+
+        // Excluir template
+        function deleteTemplate(templateId) {
+            if (confirm('❌ Tem certeza que deseja excluir este template?')) {
+                const clientsUsingTemplate = clients.filter(c => c.template === templateId);
+                
+                if (clientsUsingTemplate.length > 0) {
+                    showToast(`❌ Não é possível excluir. ${clientsUsingTemplate.length} cliente(s) usando este template.`, true);
+                    return;
+                }
+                
+                delete templates[templateId];
+                saveTemplates();
+                loadExistingTemplates();
+                showToast('✅ Template excluído com sucesso!');
+            }
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const todoCount = clients.filter(c => c.status === 'todo').length;
+            const progressCount = clients.filter(c => c.status === 'progress').length;
+            const doneCount = clients.filter(c => c.status === 'done').length;
+
+            document.getElementById('todoCount').textContent = todoCount;
+            document.getElementById('progressCount').textContent = progressCount;
+            document.getElementById('doneCount').textContent = doneCount;
+        }
+
+        // Exportar dados
+        function exportData() {
+            const data = {
+                clients: clients,
+                templates: templates,
+                exportDate: new Date().toISOString(),
+                version: '2.1'
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `clientdeck-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('✅ Dados exportados com sucesso!');
+        }
+
+        // Importar dados
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.clients && data.templates) {
+                        if (confirm('⚠️ Isso substituirá todos os dados atuais. Continuar?')) {
+                            clients = data.clients;
+                            templates = data.templates;
+                            saveData();
+                            saveTemplates();
+                            renderClients();
+                            updateStats();
+                            showToast('✅ Dados importados com sucesso!');
+                        }
+                    } else {
+                        showToast('❌ Arquivo inválido', true);
+                    }
+                } catch (error) {
+                    showToast('❌ Erro ao ler arquivo', true);
+                }
+            };
+            reader.readAsText(file);
+            
+            input.value = '';
+        }
+
+        // Configurar drag and drop
+        function setupDragAndDrop() {
+            let draggedElement = null;
+
+            document.addEventListener('dragstart', function(e) {
+                if (e.target.classList.contains('card')) {
+                    draggedElement = e.target;
+                    e.target.classList.add('dragging');
+                }
+            });
+
+            document.addEventListener('dragend', function(e) {
+                if (e.target.classList.contains('card')) {
+                    e.target.classList.remove('dragging');
+                    draggedElement = null;
+                }
+            });
+
+            ['todo', 'progress', 'done'].forEach(columnId => {
+                const column = document.getElementById(columnId);
+
+                column.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    column.classList.add('drag-over');
+                });
+
+                column.addEventListener('dragleave', function(e) {
+                    if (!column.contains(e.relatedTarget)) {
+                        column.classList.remove('drag-over');
+                    }
+                });
+
+                column.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    column.classList.remove('drag-over');
+
+                    if (draggedElement) {
+                        const clientId = parseInt(draggedElement.dataset.clientId);
+                        const client = clients.find(c => c.id === clientId);
+                        
+                        if (client && client.status !== columnId) {
+                            const statusNames = {
+                                'todo': 'A Fazer',
+                                'progress': 'Em Andamento', 
+                                'done': 'Concluído'
+                            };
+                            
+                            client.status = columnId;
+                            saveData();
+                            renderClients();
+                            updateStats();
+                            showToast(`✅ ${client.name} movido para "${statusNames[columnId]}"`);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
