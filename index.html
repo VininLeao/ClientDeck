@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClientDeck - Gerenciador de Clientes</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -277,6 +278,19 @@
             box-shadow: 0 4px 15px rgba(88, 166, 255, 0.2);
         }
 
+        .btn-ghost-danger {
+            background: transparent;
+            border: 1px solid #da3633;
+            color: #da3633;
+        }
+
+        .btn-ghost-danger:hover {
+            background: #da3633;
+            border-color: #f85149;
+            color: white;
+            box-shadow: 0 4px 15px rgba(218, 54, 51, 0.3);
+        }
+
         .btn-danger {
             background: #da3633;
             border: 1px solid #f85149;
@@ -300,6 +314,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .btn-mini {
+            padding: 4px 8px;
+            font-size: 11px;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .btn-mini.btn-save {
+            background: #238636;
+            border-color: #2ea043;
+            color: white;
+        }
+
+        .btn-mini.btn-save:hover {
+            background: #2ea043;
+            border-color: #3fb950;
+            box-shadow: 0 4px 15px rgba(46, 160, 67, 0.4);
         }
 
         .dropdown {
@@ -354,6 +388,14 @@
             border-radius: 0 0 8px 8px;
         }
 
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-btn.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
         .filter-label {
             color: #f0f6fc;
             font-weight: 600;
@@ -391,6 +433,14 @@
             gap: 20px;
             max-width: 1400px;
             margin: 0 auto 30px auto;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8b949e;
+            font-size: 0.9rem;
+            font-style: italic;
         }
 
         .table-view {
@@ -534,6 +584,13 @@
             color: #ff6b6b;
         }
 
+        .inline-edit-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
         .inline-edit {
             background: #21262d;
             border: 1px solid #58a6ff;
@@ -543,7 +600,6 @@
             font-size: 0.8rem;
             width: 100%;
             max-width: 250px;
-            margin-top: 4px;
             transition: all 0.3s ease;
         }
 
@@ -562,7 +618,6 @@
             font-size: 0.8rem;
             width: 100%;
             max-width: 250px;
-            margin-top: 4px;
             appearance: none;
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2358a6ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
             background-position: right 8px center;
@@ -580,7 +635,6 @@
         .inline-edit-checkbox {
             transform: scale(1.3);
             accent-color: #58a6ff;
-            margin-top: 4px;
         }
 
         .editing-indicator {
@@ -1178,9 +1232,10 @@
 
         .template-item-controls {
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
             align-items: center;
             margin-top: 8px;
+            width: 100%;
         }
 
         .template-item .options-input {
@@ -1213,6 +1268,26 @@
         .template-item .required-checkbox input[type="checkbox"] {
             transform: scale(1.1);
             accent-color: #f85149;
+        }
+
+        .drag-handle {
+            color: #8b949e;
+            cursor: grab;
+            font-size: 14px;
+            transition: color 0.2s ease;
+            user-select: none;
+        }
+
+        .drag-handle:hover {
+            color: #f0f6fc;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .sortable-ghost {
+            opacity: 0.4;
         }
 
         .templates-list {
@@ -1464,8 +1539,8 @@
             </button>
             
             <div class="dropdown">
-                <button class="btn btn-secondary" onclick="toggleDropdown('actionsDropdown')">
-                    <span>⚙️</span> Ações <span>▼</span>
+                <button class="btn btn-secondary dropdown-btn" id="actionsDropdownBtn" onclick="toggleDropdown('actionsDropdown')">
+                    <span>⚙️</span> Ações <span class="dropdown-arrow">▼</span>
                 </button>
                 <div id="actionsDropdown" class="dropdown-content">
                     <button class="dropdown-item" onclick="openTemplateModal(); closeDropdown('actionsDropdown')">
@@ -1489,7 +1564,7 @@
             </select>
             
             <button class="btn btn-secondary" id="tableToggleBtn" onclick="toggleTableView()">
-                <span>📊</span> Planilha
+                <span>📊</span> Mostrar Planilha
             </button>
         </div>
     </div>
@@ -1524,12 +1599,10 @@
                 </tr>
             </thead>
             <tbody id="clientsTableBody">
-                <!-- Dados da tabela serão inseridos aqui -->
-            </tbody>
+                </tbody>
         </table>
     </div>
 
-    <!-- Modal para novo cliente -->
     <div id="newClientModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1544,8 +1617,7 @@
                 <div class="form-group">
                     <label>Selecione um Template:</label>
                     <div class="templates-list" id="templatesList">
-                        <!-- Templates serão carregados aqui -->
-                    </div>
+                        </div>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-ghost" onclick="closeModal('newClientModal')">
@@ -1559,7 +1631,6 @@
         </div>
     </div>
 
-    <!-- Modal para gerenciar templates -->
     <div id="templateModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1576,8 +1647,7 @@
                 <div id="myTemplates" class="tab-content active">
                     <div class="templates-list">
                         <div id="existingTemplates">
-                            <!-- Templates existentes serão listados aqui -->
-                        </div>
+                            </div>
                     </div>
                 </div>
 
@@ -1612,6 +1682,7 @@
                                                 <input type="checkbox" id="req-new-0">
                                                 <label for="req-new-0">Obrigatório</label>
                                             </div>
+                                            <div class="drag-handle">⠿</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1632,7 +1703,7 @@
                 </div>
             </div>
 
-            <div class="modal-actions">
+            <div class="modal-actions" id="templateModalActions">
                 <button type="button" class="btn btn-secondary" onclick="closeModal('templateModal')">
                     Fechar
                 </button>
@@ -1640,7 +1711,6 @@
         </div>
     </div>
 
-    <!-- Modal para checklist do cliente -->
     <div id="checklistModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1694,6 +1764,8 @@
         let tableVisible = false;
         let expandedClientIds = new Set();
         let currentEditingRow = null;
+        let templateSortable = null;
+        let originalFieldState = null; // Para armazenar estado original na edição
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -1715,6 +1787,9 @@
                     document.querySelectorAll('.dropdown-content').forEach(dropdown => {
                         dropdown.classList.remove('show');
                     });
+                    document.querySelectorAll('.dropdown-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
                 }
             });
         }
@@ -1722,13 +1797,25 @@
         // Alternar dropdown
         function toggleDropdown(id) {
             const dropdown = document.getElementById(id);
-            dropdown.classList.toggle('show');
+            const btn = document.getElementById(id + 'Btn');
+            const isOpen = dropdown.classList.contains('show');
+            
+            // Fechar todos os dropdowns
+            document.querySelectorAll('.dropdown-content').forEach(dd => dd.classList.remove('show'));
+            document.querySelectorAll('.dropdown-btn').forEach(b => b.classList.remove('active'));
+            
+            if (!isOpen) {
+                dropdown.classList.add('show');
+                btn.classList.add('active');
+            }
         }
 
         // Fechar dropdown
-        function closeDropdown(id) {
+                function closeDropdown(id) {
             const dropdown = document.getElementById(id);
+            const btn = document.getElementById(id + 'Btn');
             dropdown.classList.remove('show');
+            btn.classList.remove('active');
         }
 
         // Alternar abas
@@ -1741,7 +1828,16 @@
             document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
             document.getElementById(tabName).classList.add('active');
             
-            if (tabName === 'myTemplates') {
+            // Controlar visibilidade do botão "Fechar" no rodapé
+            const modalActions = document.getElementById('templateModalActions');
+            if (tabName === 'templateEditor') {
+                modalActions.style.display = 'none';
+                // Inicializar sortable para novos templates se não estiver editando
+                if (!editingTemplateId) {
+                    initTemplateSortable();
+                }
+            } else {
+                modalActions.style.display = 'flex';
                 loadExistingTemplates();
             }
         }
@@ -1787,10 +1883,10 @@
             
             if (tableVisible) {
                 tableView.classList.remove('hidden');
-                toggleBtn.innerHTML = '<span>📋</span> Ocultar';
+                toggleBtn.innerHTML = '<span>📋</span> Ocultar Planilha';
             } else {
                 tableView.classList.add('hidden');
-                toggleBtn.innerHTML = '<span>📊</span> Planilha';
+                toggleBtn.innerHTML = '<span>📊</span> Mostrar Planilha';
             }
         }
 
@@ -1806,7 +1902,7 @@
                 const template = templates[templateId];
                 const option = document.createElement('option');
                 option.value = templateId;
-                                option.textContent = template.name;
+                option.textContent = template.name;
                 if (templateId === currentFilter) {
                     option.selected = true;
                 }
@@ -1911,7 +2007,14 @@
             }
         }
 
-        // Nova função de edição inline não-destrutiva
+        // Função para formatar datas no padrão brasileiro
+        function formatDateBR(dateString) {
+            if (!dateString || !dateString.includes('-')) return 'Não preenchido';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        }
+
+        // Nova função de edição inline corrigida
         function enableInlineEdit(element, clientId, itemId, itemType) {
             if (currentEditingRow && currentEditingRow !== element) {
                 cancelInlineEdit();
@@ -1925,6 +2028,15 @@
             if (!client) return;
 
             currentEditingRow = element;
+            const originalLastEditedDiv = element.querySelector('.last-edited[data-original="true"]');
+            
+            // Salvar estado original para cancelamento
+            originalFieldState = {
+                answerHtml: element.querySelector('.checklist-answer').innerHTML,
+                lastEditedHtml: originalLastEditedDiv ? originalLastEditedDiv.outerHTML : null,
+                detailRowClasses: element.closest('.detail-row').className
+            };
+
             const detailRow = element.closest('.detail-row');
             detailRow.classList.add('editing');
 
@@ -1933,6 +2045,9 @@
             const answerDiv = element.querySelector('.checklist-answer');
             
             answerDiv.style.display = 'none';
+            if (originalLastEditedDiv) {
+                originalLastEditedDiv.style.display = 'none';
+            }
             
             if (!questionDiv.querySelector('.editing-indicator')) {
                 const indicator = document.createElement('span');
@@ -1975,6 +2090,8 @@
                 input.className = 'inline-edit';
                 input.placeholder = 'Digite suas observações...';
                 input.style.minHeight = '80px';
+                input.style.width = '100%';
+                input.style.maxWidth = '400px';
             } else {
                 input = document.createElement('input');
                 input.type = itemType === 'textarea' ? 'text' : itemType;
@@ -2005,13 +2122,56 @@
                 updateStats();
                 
                 currentEditingRow = null;
+                originalFieldState = null;
             };
 
             const cancelEdit = () => {
                 cancelInlineEdit();
             };
 
-            input.onblur = saveEdit;
+            // Criar container com botões de ação
+            const container = document.createElement('div');
+            container.className = 'inline-edit-container';
+            
+            container.appendChild(input);
+            
+            if (itemType !== 'checkbox') {
+                const saveBtn = document.createElement('button');
+                saveBtn.className = 'btn btn-mini btn-save';
+                saveBtn.innerHTML = '✔️';
+                saveBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    saveEdit();
+                };
+                saveBtn.title = 'Salvar';
+                
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'btn btn-mini btn-ghost';
+                cancelBtn.innerHTML = '❌';
+                cancelBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    cancelEdit();
+                };
+                cancelBtn.title = 'Cancelar';
+                
+                container.appendChild(saveBtn);
+                container.appendChild(cancelBtn);
+            }
+
+            // Para campos de observações, preservar informação de última edição
+            if (itemType === 'observacoes' && client.observationLastEdited) {
+                 const editedInfo = document.createElement('div');
+                 editedInfo.className = 'last-edited editing-last-edited';
+                 editedInfo.textContent = `Última edição: ${formatDateTime(client.observationLastEdited)}`;
+                 container.appendChild(editedInfo);
+            }
+
+            input.onblur = () => {
+                if (itemType === 'checkbox') {
+                    saveEdit();
+                }
+            };
+
             input.onkeydown = (e) => {
                 if (e.key === 'Enter' && itemType !== 'observacoes') {
                     e.preventDefault();
@@ -2022,33 +2182,41 @@
                 }
             };
 
-            element.appendChild(input);
+            element.appendChild(container);
             input.focus();
         }
 
-        // Cancelar edição inline
+        // Cancelar edição inline corrigida
         function cancelInlineEdit() {
-            if (!currentEditingRow) return;
+            if (!currentEditingRow || !originalFieldState) return;
 
             const detailRow = currentEditingRow.closest('.detail-row');
-            detailRow.classList.remove('editing');
-
             const questionDiv = currentEditingRow.querySelector('.checklist-question');
             const answerDiv = currentEditingRow.querySelector('.checklist-answer');
+            const container = currentEditingRow.querySelector('.inline-edit-container');
             const editingIndicator = questionDiv.querySelector('.editing-indicator');
-            const input = currentEditingRow.querySelector('.inline-edit, .inline-edit-select, .inline-edit-checkbox');
+            const originalLastEditedDiv = currentEditingRow.querySelector('.last-edited[data-original="true"]');
 
+            // Restaurar estado original
+            detailRow.className = originalFieldState.detailRowClasses;
+            answerDiv.innerHTML = originalFieldState.answerHtml;
+            answerDiv.style.display = 'block';
+
+            if (originalLastEditedDiv) {
+                originalLastEditedDiv.style.display = '';
+            }
+
+            // Remover elementos de edição
             if (editingIndicator) {
                 editingIndicator.remove();
             }
 
-            if (input) {
-                input.remove();
+            if (container) {
+                container.remove();
             }
-
-            answerDiv.style.display = 'block';
-
+            
             currentEditingRow = null;
+            originalFieldState = null;
         }
 
         // Nova função para renderizar a tabela preservando o estado de expansão
@@ -2119,6 +2287,9 @@
                             answerContent = '❌ Não';
                             answerClass = 'incomplete';
                         }
+                    } else if (item.type === 'date' && response) {
+                        answerContent = formatDateBR(response);
+                        answerClass = 'completed';
                     } else {
                         answerContent = response || 'Não preenchido';
                         answerClass = response ? 'completed' : 'incomplete';
@@ -2138,7 +2309,7 @@
                                 </div>
                                 <div>
                                     <div class="checklist-answer ${answerClass}">${answerContent}</div>
-                                    ${lastEdited ? `<div class="last-edited">Última edição: ${lastEdited}</div>` : ''}
+                                    ${lastEdited ? `<div class="last-edited" data-original="true">Última edição: ${lastEdited}</div>` : ''}
                                 </div>
                             </div>
                         `;
@@ -2367,11 +2538,11 @@
             showToast('✅ Cliente criado com sucesso!');
         });
 
-        // Renderizar clientes
+        // Renderizar clientes com mensagens de estado vazio
         function renderClients() {
             ['todo', 'progress', 'done'].forEach(status => {
                 const column = document.getElementById(status);
-                const cards = column.querySelectorAll('.card');
+                const cards = column.querySelectorAll('.card, .empty-state');
                 cards.forEach(card => card.remove());
             });
 
@@ -2379,9 +2550,29 @@
                 ? clients 
                 : clients.filter(c => c.template === currentFilter);
 
-            filteredClients.forEach(client => {
-                const card = createCardElement(client);
-                document.getElementById(client.status).appendChild(card);
+            // Agrupar clientes por status
+            const clientsByStatus = {
+                todo: filteredClients.filter(c => c.status === 'todo'),
+                progress: filteredClients.filter(c => c.status === 'progress'),
+                done: filteredClients.filter(c => c.status === 'done')
+            };
+
+            // Renderizar clientes ou mensagem de estado vazio
+            ['todo', 'progress', 'done'].forEach(status => {
+                const column = document.getElementById(status);
+                const statusClients = clientsByStatus[status];
+                
+                if (statusClients.length === 0) {
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'empty-state';
+                    emptyState.textContent = 'Nenhum cliente aqui.';
+                    column.appendChild(emptyState);
+                } else {
+                    statusClients.forEach(client => {
+                        const card = createCardElement(client);
+                        column.appendChild(card);
+                    });
+                }
             });
         }
 
@@ -2423,16 +2614,27 @@
             return card;
         }
 
-        // Calcular progresso
+        // Calcular progresso corrigido - baseado apenas em campos obrigatórios
         function calculateProgress(client) {
             const template = templates[client.template];
             if (!template) return 0;
             
-            const checkboxItems = template.items.filter(item => item.type === 'checkbox');
-            const completedItems = checkboxItems.filter(item => client.responses[item.id] === true);
+            const requiredItems = template.items.filter(item => item.isRequired);
             
-            if (checkboxItems.length === 0) return 0;
-            return Math.round((completedItems.length / checkboxItems.length) * 100);
+            // Se não há campos obrigatórios, progresso é 100%
+            if (requiredItems.length === 0) return 100;
+            
+            const completedItems = requiredItems.filter(item => {
+                const response = client.responses[item.id];
+                
+                if (item.type === 'checkbox') {
+                    return response === true;
+                } else {
+                    return response && response.toString().trim() !== '';
+                }
+            });
+            
+            return Math.round((completedItems.length / requiredItems.length) * 100);
         }
 
         // Função para atualizar status automaticamente baseado no progresso
@@ -2441,12 +2643,6 @@
             let newStatus = client.status;
             
             if (progress === 100) {
-                const validation = validateRequiredFields(client);
-                if (!validation.valid) {
-                    showToast(`❌ Preencha todos os campos obrigatórios para concluir: ${validation.missing.join(', ')}`, true);
-                    return false;
-                }
-                
                 newStatus = 'done';
                 if (!client.completedAt) {
                     client.completedAt = new Date().toISOString();
@@ -2589,6 +2785,7 @@
                     ...client,
                     id: Date.now(),
                     name: client.name + ' (Cópia)',
+                    status: 'todo',
                     responses: {},
                     createdAt: new Date().toISOString(),
                     completedAt: null,
@@ -2644,7 +2841,7 @@
                             ✏️ Editar
                         </button>
                         ${!template.isDefault ? `
-                            <button class="btn btn-danger btn-small" onclick="deleteTemplate('${key}')">
+                            <button class="btn btn-ghost-danger btn-small" onclick="deleteTemplate('${key}')">
                                 🗑️ Excluir
                             </button>
                         ` : ''}
@@ -2696,13 +2893,41 @@
                             <input type="checkbox" id="req-edit-${index}" ${item.isRequired ? 'checked' : ''}>
                             <label for="req-edit-${index}">Obrigatório</label>
                         </div>
+                        <div class="drag-handle">⠿</div>
                     </div>
                 `;
                 
                 container.appendChild(questionBlock);
             });
             
+            // Inicializar drag and drop para reordenação
+            initTemplateSortable();
+            
             switchTab('templateEditor');
+        }
+
+        // Inicializar SortableJS para reordenação de templates
+        function initTemplateSortable() {
+            if (templateSortable) {
+                templateSortable.destroy();
+            }
+            
+            const container = document.getElementById('templateItems');
+            templateSortable = new Sortable(container, {
+                handle: '.drag-handle',
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: function (evt) {
+                    // Para novos templates, apenas salvar quando o template for salvo
+                    if (editingTemplateId && templates[editingTemplateId]) {
+                        const template = templates[editingTemplateId];
+                        const movedItem = template.items.splice(evt.oldIndex, 1)[0];
+                        template.items.splice(evt.newIndex, 0, movedItem);
+                        saveTemplates();
+                        showToast('✅ Ordem das perguntas atualizada!');
+                    }
+                }
+            });
         }
 
         // Cancelar edição de template
@@ -2711,6 +2936,10 @@
             document.getElementById('editorTitle').textContent = '➕ Criar Novo Template';
             document.getElementById('templateName').value = '';
             resetTemplateItems();
+            if (templateSortable) {
+                templateSortable.destroy();
+                templateSortable = null;
+            }
             switchTab('myTemplates');
         }
 
@@ -2737,9 +2966,15 @@
                             <input type="checkbox" id="req-new-0">
                             <label for="req-new-0">Obrigatório</label>
                         </div>
+                        <div class="drag-handle">⠿</div>
                     </div>
                 </div>
             `;
+            
+            // Inicializar sortable para novos templates também
+            setTimeout(() => {
+                initTemplateSortable();
+            }, 100);
         }
 
         // Adicionar item ao template
@@ -2769,10 +3004,14 @@
                         <input type="checkbox" id="req-new-${itemCount}">
                         <label for="req-new-${itemCount}">Obrigatório</label>
                     </div>
+                    <div class="drag-handle">⠿</div>
                 </div>
             `;
             
             container.appendChild(questionBlock);
+            
+            // Reinicializar sortable
+            initTemplateSortable();
         }
 
         // Remover item do template
@@ -2780,6 +3019,9 @@
             const container = button.closest('#templateItems');
             if (container.children.length > 1) {
                 button.closest('.template-question-block').remove();
+                
+                // Reinicializar sortable
+                initTemplateSortable();
             } else {
                 showToast('❌ Deve haver pelo menos uma pergunta no template', true);
             }
@@ -2843,6 +3085,10 @@
             document.getElementById('editorTitle').textContent = '➕ Criar Novo Template';
             document.getElementById('templateName').value = '';
             resetTemplateItems();
+            if (templateSortable) {
+                templateSortable.destroy();
+                templateSortable = null;
+            }
             switchTab('myTemplates');
         }
 
@@ -2885,7 +3131,7 @@
                 clients: clients,
                 templates: templates,
                 exportDate: new Date().toISOString(),
-                version: '4.0'
+                version: '6.0'
             };
 
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -3036,4 +3282,3 @@
     </script>
 </body>
 </html>
-                
